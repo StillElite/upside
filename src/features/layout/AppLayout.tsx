@@ -7,7 +7,7 @@ import { products } from '../../data/mockData';
 const AppLayout: React.FC = () => {
   const [activeView, setActiveView] = useState<'product' | 'pantry'>('product');
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null,
+    products[0].id,
   );
 
   const selectedProduct =
