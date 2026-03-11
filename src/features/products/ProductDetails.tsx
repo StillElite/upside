@@ -9,17 +9,25 @@ export interface ProductDetailsProps {
 export const ProductDetails = ({ selectedProduct }: ProductDetailsProps) => {
   const sellPrice = formatMoney(selectedProduct.sellPrice);
   return (
-    <div className='flex flex-col'>
-      <div className='flex items-center'>
+    // h-full and min-h-0 are required to pass the "scrolling" ability down
+    <div className='flex flex-col h-full min-h-0'>
+      <div className='flex items-center shrink-0'>
+        {' '}
+        {/* shrink-0 keeps the header from squishing */}
         <span>Sell Price:</span>
         <input
           id='sell-price'
           value={sellPrice}
-          // onChange={}
-          className='relative z-0 peer bg-white font-semibold ml-2 pl-2 border border-gray-300 rounded-md text-base text-[#1c2b3d] placeholder-transparent shadow-sm focus:outline-none focus:border-[#315e88] focus-visible:ring-2 focus-visible:ring-[#315e88] appearance-none flex items-center h-8 w-60'
+          className='relative z-0 peer bg-white font-semibold ml-2 pl-2 border border-gray-300 rounded-md text-base text-[#1c2b3d] h-8 w-60'
         />
       </div>
       <IngredientList ingredients={selectedProduct.ingredients} />
+      {/* 3. BOTTOM: Your "Finished Look" Message (Pinned) */}
+      <div className='shrink-0 pt-6 pb-2 mt-auto border-t border-[#c6c8d2]/40'>
+        <p className='text-[#1c2b3d]/50 italic text-[13px] tracking-wide'>
+          Prices are managed manually to ensure calculation accuracy.
+        </p>
+      </div>
     </div>
   );
 };

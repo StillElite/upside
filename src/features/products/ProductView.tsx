@@ -1,6 +1,7 @@
 import { ProductDetails } from './ProductDetails';
 import { Product } from '../../types/products';
 import { Header } from '../../components/Header';
+import { ProductSidebar } from './ProductSidebar';
 
 export interface ProductViewProps {
   selectedProduct: Product;
@@ -8,13 +9,14 @@ export interface ProductViewProps {
 
 export const ProductView = ({ selectedProduct }: ProductViewProps) => {
   return (
-    <>
+    // Add flex and h-full here so it doesn't grow past the screen
+    <div className='flex flex-col h-full overflow-hidden'>
       <Header title={selectedProduct.name} />
 
-      <div className='h-full w-full grid gap-6 lg:grid-cols-[minmax(0,900px)_420px] 2xl:grid-cols-[minmax(0,900px)_480px] p-8 bg-[#f3f5f2]'>
+      <div className='flex-1 grid gap-6 lg:grid-cols-[minmax(0,900px)_420px] 2xl:grid-cols-[minmax(0,900px)_480px] p-8 bg-[#f3f5f2] overflow-hidden'>
         <ProductDetails selectedProduct={selectedProduct} />
-        <div className='block'>Product Sidebar</div>
+        <ProductSidebar selectedProduct={selectedProduct} />
       </div>
-    </>
+    </div>
   );
 };

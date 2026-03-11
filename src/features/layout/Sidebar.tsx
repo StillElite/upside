@@ -26,12 +26,7 @@ export const Sidebar = ({
         <img src='/upside-logo.png' alt='Upside logo' />
       </div>
       <div className='flex justify-center py-5 px-4'>
-        <Button
-          className='bg-[#315e88] hover:bg-[#274f72] text-white w-full justify-center '
-          text={'New Product'}
-          icon={faPlus}
-          iconPosition='left'
-        />
+        <Button text={'New Product'} className='w-full' icon={faPlus} />
       </div>
       <nav className=' pb-6'>
         <button

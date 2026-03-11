@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom Scrollbar Styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px; /* Slimmer than default */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Makes it feel like it's part of the background */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #c6c8d2; /* Matches your UI borders */
+  border-radius: 20px; /* Rounded caps for a modern look */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #315e88; /* Changes to your brand blue on hover */
+}
