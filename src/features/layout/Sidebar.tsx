@@ -18,8 +18,7 @@ export const Sidebar = ({
   setSelectedProductId,
   setActiveView,
 }: SidebarProps) => {
-  const asideClasses =
-    'w-72 min-h-screen bg-[#2f4559] text-white border-r border-slate-700';
+  const asideClasses = 'w-72 bg-[#2f4559] text-white border-r border-slate-700';
 
   return (
     <aside className={asideClasses} aria-label='Sidebar navigation'>
