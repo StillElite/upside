@@ -9,7 +9,6 @@ export interface IngredientListProps {
 export const IngredientList = ({ ingredients }: IngredientListProps) => {
   return (
     <div className='flex flex-col flex-1 min-h-0'>
-      {/* HEADER TOOLBAR */}
       <div className='flex items-center justify-between border-b border-[#c6c8d2] pb-2 pt-8 shrink-0'>
         <h2 className='text-[#1c2b3d] font-semibold'>Ingredients</h2>
 
@@ -25,7 +24,6 @@ export const IngredientList = ({ ingredients }: IngredientListProps) => {
         </div>
       </div>
 
-      {/* SCROLLABLE LIST AREA */}
       <div className='flex-1 min-h-0 overflow-y-auto custom-scrollbar'>
         <ul className='text-[#1c2b3d]'>
           {ingredients.map((ingredient, index) => {

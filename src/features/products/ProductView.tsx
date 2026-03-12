@@ -9,7 +9,6 @@ export interface ProductViewProps {
 
 export const ProductView = ({ selectedProduct }: ProductViewProps) => {
   return (
-    // Add flex and h-full here so it doesn't grow past the screen
     <div className='flex flex-col h-full overflow-hidden'>
       <Header title={selectedProduct.name} />
 

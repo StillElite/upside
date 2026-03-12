@@ -1,5 +1,3 @@
-import { Children } from 'react';
-
 export interface PanelCardProps {
   title: string;
   children: React.ReactNode;

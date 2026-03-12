@@ -116,7 +116,7 @@ export const products: Product[] = [
   {
     id: 4,
     name: 'Loaded Nachos',
-    sellPrice: 14.5,
+    sellPrice: 24.5,
     ingredients: [
       { id: 1, name: 'Tortilla Chips', quantity: 8, unit: 'oz', cost: 1.25 },
       { id: 2, name: 'Ground Beef', quantity: 4, unit: 'oz', cost: 1.6 },
