@@ -14,8 +14,8 @@ const AppLayout: React.FC = () => {
     products.find((p) => p.id === selectedProductId) ?? products[0];
 
   return (
-    <div className='h-dvh overflow-hidden bg-[#253a4b] p-6'>
-      <div className='mx-auto flex h-full w-full max-w-[1500px] overflow-hidden rounded-[32px]'>
+    <div className='h-dvh overflow-x-auto overflow-y-hidden bg-[#253a4b] p-6'>
+      <div className='mx-auto flex h-full w-full max-w-[1500px] min-w-[1200px] overflow-hidden rounded-[32px]'>
         <Sidebar
           products={products}
           selectedProductId={selectedProductId}

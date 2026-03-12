@@ -8,8 +8,6 @@ export interface ProductSidebarProps {
 }
 
 export const ProductSidebar = ({ selectedProduct }: ProductSidebarProps) => {
-  const ingredients = selectedProduct.ingredients;
-
   return (
     <div className='flex flex-col gap-2'>
       <PanelCard title='Cost & Profit'>
@@ -17,9 +15,17 @@ export const ProductSidebar = ({ selectedProduct }: ProductSidebarProps) => {
       </PanelCard>
 
       <PanelCard title='Quick Actions'>
-        <div className='flex gap-2'>
-          <Button text={'Edit Price'} className='w-full' />
-          <Button text={'Reset Reference'} className='w-full' />
+        <div className='space-y-3'>
+          <div className='flex gap-2'>
+            <Button text={'Edit Price'} className='w-full' />
+            <Button
+              text={'Reset Reference'}
+              className='w-full'
+              variant='secondary'
+            />
+          </div>
+          <div className='h-[1px] bg-[#c6c8d2]/30 my-2' />
+          <Button text='Delete Recipe' variant='destructive' />
         </div>
       </PanelCard>
     </div>
