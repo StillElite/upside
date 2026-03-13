@@ -15,18 +15,7 @@ export const ProductSidebar = ({ selectedProduct }: ProductSidebarProps) => {
       </PanelCard>
 
       <PanelCard title='Quick Actions'>
-        <div className='space-y-3'>
-          <div className='flex gap-2'>
-            <Button text={'Edit Price'} className='w-full' />
-            <Button
-              text={'Reset Reference'}
-              className='w-full'
-              variant='secondary'
-            />
-          </div>
-          <div className='h-[1px] bg-[#c6c8d2]/30 my-2' />
-          <Button text='Delete Recipe' variant='destructive' />
-        </div>
+        <Button text='Delete Recipe' variant='destructive' />
       </PanelCard>
     </div>
   );

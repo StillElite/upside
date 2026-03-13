@@ -8,13 +8,10 @@ export interface ProductDetailsProps {
 
 export const ProductDetails = ({ selectedProduct }: ProductDetailsProps) => {
   const sellPrice = formatMoney(selectedProduct.sellPrice);
+
   return (
-    // h-full and min-h-0 are required to pass the "scrolling" ability down
     <div className='flex flex-col h-full min-h-0'>
       <div className='flex items-center shrink-0'>
-        {' '}
-        {/* shrink-0 keeps the header from squishing */}
-        <span>Sell Price:</span>
         <input
           id='sell-price'
           value={sellPrice}
@@ -22,7 +19,7 @@ export const ProductDetails = ({ selectedProduct }: ProductDetailsProps) => {
         />
       </div>
       <IngredientList ingredients={selectedProduct.ingredients} />
-      {/* 3. BOTTOM: Your "Finished Look" Message (Pinned) */}
+
       <div className='shrink-0 pt-6 pb-2 mt-auto border-t border-[#c6c8d2]/40'>
         <p className='text-[#1c2b3d]/50 italic text-[13px] tracking-wide'>
           Prices are managed manually to ensure calculation accuracy.

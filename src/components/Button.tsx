@@ -4,10 +4,10 @@ import { ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  text: string;
+  text?: string;
   icon?: IconDefinition;
   iconPosition?: 'left' | 'right';
-  variant?: 'primary' | 'secondary' | 'destructive';
+  variant?: 'primary' | 'secondary' | 'destructive' | 'icon-only';
 }
 
 export const Button = ({
@@ -31,6 +31,8 @@ export const Button = ({
       'px-4 py-2 rounded-md border border-[#305e88] bg-white text-[#305e88] hover:bg-[#305e88]/10 transition-colors',
 
     variant === 'destructive' && 'text-red-600 hover:underline',
+
+    variant === 'icon-only' && '',
 
     className,
   );

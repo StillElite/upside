@@ -26,27 +26,39 @@ export const CostSummary = ({ selectedProduct }: CostSummaryProps) => {
   return (
     <ul className='space-y-3'>
       <li className='flex justify-between text-sm'>
+        <span className='text-neutral-500'>Current Cost</span>
+        <strong className='text-neutral-800'>{formatMoney(currentCost)}</strong>
+      </li>
+      <li className='flex justify-between text-sm'>
         <span className='text-neutral-500'>Sell Price</span>
         <strong className='text-neutral-800'>
           {formatMoney(selectedProduct.sellPrice)}
         </strong>
       </li>
+      <li className='flex justify-between text-sm '>
+        <span className='text-[#1c2b3d] font-bold'>Profit Now</span>
+        <span className='text-[#315e88] font-bold text-lg'>
+          {formatMoney(selectedProduct.sellPrice - currentCost)}
+        </span>
+      </li>
+      <div className='h-[1px] bg-[#c6c8d2]/30 my-2' />
       <li className='flex justify-between text-sm'>
-        <span className='text-neutral-500'>Current Cost</span>
-        <strong className='text-neutral-800'>{formatMoney(currentCost)}</strong>
+        <span className='text-neutral-500'>Reference Cost</span>
+        <strong className='text-neutral-800'>
+          {formatMoney(referenceCost)}
+        </strong>
+      </li>
+      <li className='flex justify-between text-sm '>
+        <span className='text-[#1c2b3d] font-bold'>Profit at Reference</span>
+        <span className='text-[#315e88] font-bold text-lg'>
+          {formatMoney(selectedProduct.sellPrice - referenceCost)}
+        </span>
       </li>
       <li className='flex justify-between items-center bg-[#fff4e5] px-2 py-1 rounded-md -mx-2'>
         <span className='text-[#855d2b] text-xs font-semibold uppercase tracking-wider'>
           Cost Drift
         </span>
         <span className='text-[#855d2b] font-bold'>+{formatMoney(drift)}</span>
-      </li>
-
-      <li className='flex justify-between text-sm pt-2 border-t border-[#c6c8d2]/30'>
-        <span className='text-[#1c2b3d] font-bold'>Profit Now</span>
-        <span className='text-[#315e88] font-bold text-lg'>
-          {formatMoney(selectedProduct.sellPrice - currentCost)}
-        </span>
       </li>
     </ul>
   );

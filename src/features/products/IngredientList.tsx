@@ -55,7 +55,7 @@ export const IngredientList = ({ ingredients }: IngredientListProps) => {
 
                     <FontAwesomeIcon
                       icon={faTrash}
-                      className='text-gray-400  hover:text-[#ba3d3d] cursor-pointer transition-colors duration-150'
+                      className='text-gray-400 hover:text-[#ba3d3d] cursor-pointer transition-colors duration-150'
                     />
                   </div>
                 </div>
