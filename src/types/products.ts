@@ -1,5 +1,5 @@
 export interface IngredientItem {
-  id: number;
+  id: string;
   name: string;
   quantity: number;
   unit: string;
@@ -7,7 +7,7 @@ export interface IngredientItem {
 }
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   sellPrice: number;
   ingredients: IngredientItem[];

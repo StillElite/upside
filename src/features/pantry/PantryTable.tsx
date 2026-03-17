@@ -8,9 +8,9 @@ interface PantryTableProps {
 
 export const PantryTable = ({ ingredients }: PantryTableProps) => {
   return (
-    <div className='mt-6 overflow-hidden rounded-lg border border-[#c6c8d2]'>
+    <div className='mt-6 flex-1 overflow-y-auto custom-scrollbar rounded-lg bg-white border border-[#c6c8d2]'>
       <table className='w-full table-fixed text-sm text-[#1c2b3d]'>
-        <thead className='bg-[#e0e7ec] text-left '>
+        <thead className='sticky top-0 z-10 bg-[#e0e7ec] text-left'>
           <tr>
             <th className='px-4 py-3 font-semibold w-[40%]'>Ingredient</th>
             <th className='px-4 py-3 font-semibold w-[15%] text-right'>
@@ -28,7 +28,7 @@ export const PantryTable = ({ ingredients }: PantryTableProps) => {
           </tr>
         </thead>
 
-        <tbody className='bg-white'>
+        <tbody className='bg-white rounded-lg'>
           {ingredients.map((ingredient) => (
             <tr
               key={ingredient.id}
@@ -45,7 +45,7 @@ export const PantryTable = ({ ingredients }: PantryTableProps) => {
               </td>
 
               <td className='px-4 py-3 text-right'>
-                ${(ingredient.packagePrice / ingredient.packageSize).toFixed(2)}{' '}
+                ${(ingredient.packagePrice / ingredient.packageSize).toFixed(2)}
                 / {ingredient.packageUnit}
               </td>
 

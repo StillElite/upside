@@ -5,9 +5,9 @@ import { Product } from '../../types/products';
 
 interface SidebarProps {
   products: Product[];
-  selectedProductId: number | null;
+  selectedProductId: string | null;
   activeView: 'product' | 'pantry';
-  setSelectedProductId: (productId: number | null) => void;
+  setSelectedProductId: (productId: string | null) => void;
   setActiveView: (viewName: 'product' | 'pantry') => void;
 }
 
