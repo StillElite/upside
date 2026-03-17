@@ -41,7 +41,7 @@ export const CostSummary = ({ selectedProduct }: CostSummaryProps) => {
           {formatMoney(selectedProduct.sellPrice - currentCost)}
         </span>
       </li>
-      <div className='h-[1px] bg-[#c6c8d2]/30 my-2' />
+      <li className='h-[1px] bg-[#c6c8d2]/30 my-2' />
       <li className='flex justify-between text-sm'>
         <span className='text-neutral-500'>Reference Cost</span>
         <strong className='text-neutral-800'>

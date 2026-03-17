@@ -39,7 +39,10 @@ const AppLayout: React.FC = () => {
           setSelectedProductId={setSelectedProductId}
           setActiveView={setActiveView}
         />
-        <main className='flex-1'>
+        <main
+          className='flex-1'
+          aria-label={activeView === 'pantry' ? 'Pantry view' : 'Product view'}
+        >
           {activeView === 'pantry' ? (
             <PantryView />
           ) : (

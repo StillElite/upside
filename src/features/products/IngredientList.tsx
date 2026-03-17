@@ -47,15 +47,18 @@ export const IngredientList = ({ ingredients }: IngredientListProps) => {
                     {name} - {quantityDisplay} -
                     <strong>{formatMoney(cost)}</strong>
                   </div>
-                  <div className='flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity'>
-                    <FontAwesomeIcon
+                  <div className='flex items-center gap-3 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity'>
+                    <Button
                       icon={faPen}
-                      className='text-gray-400 hover:text-[#305e88] cursor-pointer transition-colors duration-150'
+                      variant='icon-only'
+                      className='text-gray-400 hover:text-[#305e88]'
+                      aria-label={`Edit ${name}`}
                     />
-
-                    <FontAwesomeIcon
+                    <Button
                       icon={faTrash}
-                      className='text-gray-400 hover:text-[#ba3d3d] cursor-pointer transition-colors duration-150'
+                      variant='icon-only'
+                      className='text-gray-400 hover:text-[#ba3d3d]'
+                      aria-label={`Delete ${name}`}
                     />
                   </div>
                 </div>

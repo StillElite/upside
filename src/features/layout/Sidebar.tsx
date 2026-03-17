@@ -67,6 +67,7 @@ export const Sidebar = ({
                       setSelectedProductId(product.id);
                       setActiveView('product');
                     }}
+                    aria-current={isActive ? 'true' : undefined}
                   >
                     {product.name}
                   </button>

@@ -20,7 +20,7 @@ export const Button = ({
   ...rest
 }: ButtonProps) => {
   const baseClasses =
-    'inline-flex items-center justify-center gap-1 text-sm font-medium';
+    'inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#305e88]';
   const classes = clsx(
     baseClasses,
 

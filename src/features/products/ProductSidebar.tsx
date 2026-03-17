@@ -14,8 +14,12 @@ export const ProductSidebar = ({ selectedProduct }: ProductSidebarProps) => {
         <CostSummary selectedProduct={selectedProduct} />
       </PanelCard>
 
-      <PanelCard title='Quick Actions'>
-        <Button text='Delete Recipe' variant='destructive' />
+      <PanelCard title='Quick Action'>
+        <Button
+          text='Delete Recipe'
+          variant='destructive'
+          aria-label={`Delete ${selectedProduct.name}`}
+        />
       </PanelCard>
     </div>
   );
