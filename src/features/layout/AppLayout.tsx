@@ -4,6 +4,7 @@ import { ProductView } from '../products/ProductView';
 import { PantryView } from '../pantry/PantryView';
 import { products as initialProducts } from '../../data/mockData';
 import { IngredientItem, Product } from '../../types/products';
+import { NewProductModal } from '../products/NewProductModal';
 
 const AppLayout: React.FC = () => {
   const [activeView, setActiveView] = useState<'product' | 'pantry'>('product');
@@ -11,6 +12,7 @@ const AppLayout: React.FC = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     initialProducts[0].id,
   );
+  const [isNewProductOpen, setIsNewProductOpen] = useState(false);
 
   const selectedProduct =
     products.find((p) => p.id === selectedProductId) ?? products[0];
@@ -38,6 +40,11 @@ const AppLayout: React.FC = () => {
           activeView={activeView}
           setSelectedProductId={setSelectedProductId}
           setActiveView={setActiveView}
+          onAddProduct={() => setIsNewProductOpen(true)}
+        />
+        <NewProductModal
+          isOpen={isNewProductOpen}
+          onClose={() => setIsNewProductOpen(false)}
         />
         <main
           className='flex-1'

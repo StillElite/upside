@@ -10,6 +10,7 @@ export interface FormModalProps {
   title: string;
   cancelLabel: string;
   submitLabel: string;
+  onSubmit: () => void;
 }
 
 export const FormModal = ({
@@ -19,10 +20,11 @@ export const FormModal = ({
   title,
   cancelLabel,
   submitLabel,
+  onSubmit,
 }: FormModalProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onClose();
+    onSubmit();
   };
 
   const handleClose = () => {
@@ -42,7 +44,7 @@ export const FormModal = ({
         labelledby: 'modal-title',
       }}
       className='w-full max-w-md mx-4 rounded-xl border border-[#31475c] bg-[#305e88] text-[#1c2b3d] shadow-md focus:outline-none'
-      overlayClassName='fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50'
+      overlayClassName='fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50'
     >
       <div className='overflow-hidden rounded-xl'>
         <div className='relative border-b border-[#2f4f6a] px-6 py-5'>
@@ -64,9 +66,7 @@ export const FormModal = ({
         </div>
 
         <form onSubmit={handleSubmit} className='bg-[#f7f9fb] '>
-          <div className='px-6 py-6'>
-            <div className='space-y-5'>{children}</div>
-          </div>
+          <div className='px-6 py-6'>{children}</div>
 
           <div className='flex justify-end gap-3 border-t border-[#d6dde4] px-6 py-5'>
             <Button
