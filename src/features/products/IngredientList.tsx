@@ -7,19 +7,27 @@ import {
 import { Button } from '../../components/Button';
 import { IngredientItem } from '../../types/products';
 import { formatMoney } from '../../utils/formatMoney';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
+import { AddIngredientModal } from './AddIngredientModal';
 
 export interface IngredientListProps {
   ingredients: IngredientItem[];
 }
 export const IngredientList = ({ ingredients }: IngredientListProps) => {
+  const [isAddIngredientOpen, setIsAddIngredientOpen] = useState(false);
+
   return (
     <div className='flex flex-col flex-1 min-h-0'>
       <div className='flex items-center justify-between border-b border-[#c6c8d2] pb-2 pt-8 shrink-0'>
         <h2 className='text-[#1c2b3d] font-semibold'>Ingredients</h2>
 
         <div className='flex gap-2'>
-          <Button text={'Add Ingredient'} className='text-xs' icon={faPlus} />
+          <Button
+            text={'Add Ingredient'}
+            className='text-xs'
+            icon={faPlus}
+            onClick={() => setIsAddIngredientOpen(true)}
+          />
           <Button
             text={'Set Reference'}
             className='text-xs'
@@ -28,6 +36,10 @@ export const IngredientList = ({ ingredients }: IngredientListProps) => {
             iconPosition='right'
           />
         </div>
+        <AddIngredientModal
+          isOpen={isAddIngredientOpen}
+          onClose={() => setIsAddIngredientOpen(false)}
+        />
       </div>
 
       <div className='flex-1 min-h-0 overflow-y-auto custom-scrollbar'>

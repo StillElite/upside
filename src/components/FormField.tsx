@@ -38,9 +38,11 @@ export const FormField = ({
   };
 
   const inputClasses = clsx(
-    'w-full h-10 rounded-md border bg-white px-2 py-2  text-[#1c2b3d] shadow-sm outline-none transition',
-    'border-[#8ea3b5] focus:border-[#305e88] focus:ring-2 focus:ring-[#305e88] focus:ring-offset-2 focus:ring-offset-white',
+    'w-full rounded-md border border-[#8ea3b5] bg-white px-3 text-sm text-[#1c2b3d] transition outline-none',
+    'focus:border-[#305e88] focus:ring-1 focus:ring-[#305e88]',
     'disabled:cursor-not-allowed disabled:bg-[#eef3f7] disabled:text-[#6b7a8c]',
+    !isTextarea && 'h-[38px]',
+    isTextarea && 'min-h-[96px] py-2',
     error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
   );
 
@@ -70,7 +72,7 @@ export const FormField = ({
   };
 
   return (
-    <>
+    <div className='space-y-1'>
       <label htmlFor={id} className='block text-sm font-medium text-[#38506a]'>
         {label}
       </label>
@@ -81,21 +83,14 @@ export const FormField = ({
         <input {...sharedProps} type={type} />
       )}
 
-      <div className='mt-1 flex justify-between text-xs'>
-        {error ? (
-          <p id={`${id}-error`} className='text-red-600'>
-            {error}
-          </p>
-        ) : (
-          <span />
-        )}
-
-        {maxLength && type !== 'number' && typeof value === 'string' ? (
-          <p className='text-[#6b7a8c]'>
-            {value.length}/{maxLength}
-          </p>
-        ) : null}
-      </div>
-    </>
+      {error && (
+        <p
+          id={`${id}-error`}
+          className='mt-1 text-xs text-red-600 transition-all duration-200 ease-in-out'
+        >
+          {error}
+        </p>
+      )}
+    </div>
   );
 };

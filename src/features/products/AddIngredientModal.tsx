@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FormModal } from '../../components/FormModal';
+import CreatableSelect from 'react-select/creatable';
 
 interface AddIngredientModalProps {
   isOpen: boolean;
@@ -10,10 +11,26 @@ export const AddIngredientModal = ({
   isOpen,
   onClose,
 }: AddIngredientModalProps) => {
-  const [ingredientName, setIngredientName] = useState('');
+  const [ingredient, setIngredient] = useState<{
+    label: string;
+    value: string;
+  } | null>(null);
 
   const handleSubmit = () => {
-    console.log({ ingredientName });
+    if (!ingredient) return;
+
+    console.log({ ingredient });
+  };
+
+  const creatableSelectStyles = {
+    control: (base: any, state: { isFocused: boolean }) => ({
+      ...base,
+      borderColor: state.isFocused ? '#305e88' : base.borderColor,
+      boxShadow: state.isFocused ? '0 0 0 1px #305e88' : base.boxShadow,
+      '&:hover': {
+        borderColor: '#305e88',
+      },
+    }),
   };
 
   return (
@@ -33,7 +50,17 @@ export const AddIngredientModal = ({
           Ingredient
         </label>
 
-        <div id='ingredient-name'>Creatable select goes here</div>
+        <CreatableSelect
+          inputId='ingredient-name'
+          value={ingredient}
+          onChange={(newValue) =>
+            setIngredient(newValue as { label: string; value: string } | null)
+          }
+          placeholder='Select or create ingredient...'
+          isClearable
+          classNamePrefix='react-select'
+          styles={creatableSelectStyles}
+        />
       </div>
     </FormModal>
   );
