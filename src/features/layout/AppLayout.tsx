@@ -3,7 +3,7 @@ import { Sidebar } from './Sidebar';
 import { ProductView } from '../products/ProductView';
 import { PantryView } from '../pantry/PantryView';
 import { products as initialProducts } from '../../data/mockData';
-import { IngredientItem, Product } from '../../types/products';
+import { Product } from '../../types/products';
 import { NewProductModal } from '../products/NewProductModal';
 
 const AppLayout: React.FC = () => {
@@ -17,19 +17,19 @@ const AppLayout: React.FC = () => {
   const selectedProduct =
     products.find((p) => p.id === selectedProductId) ?? products[0];
 
-  // const handleAddProduct = (newProductData: {
-  //   id: string;
-  //   name: string;
-  //   sellPrice: number;
-  //   ingredients: IngredientItem[];
-  // }) => {
-  //   const newProduct: Product = {
-  //     id: crypto.randomUUID(),
-  //     name: newProductData.name,
-  //     sellPrice: newProductData.sellPrice,
-  //     ingredients: newProductData.ingredients,
-  //   };
-  // };
+  const handleCreateProduct = (newProductData: {
+    name: string;
+    sellPrice: number;
+  }) => {
+    const newProduct: Product = {
+      id: crypto.randomUUID(),
+      name: newProductData.name,
+      sellPrice: newProductData.sellPrice,
+      ingredients: [],
+    };
+    setProducts((prev) => [newProduct, ...prev]);
+    setSelectedProductId(newProduct.id);
+  };
 
   return (
     <div className='h-dvh overflow-x-auto overflow-y-hidden bg-[#253a4b] p-6'>
@@ -45,6 +45,7 @@ const AppLayout: React.FC = () => {
         <NewProductModal
           isOpen={isNewProductOpen}
           onClose={() => setIsNewProductOpen(false)}
+          onCreateProduct={handleCreateProduct}
         />
         <main
           className='flex-1'

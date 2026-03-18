@@ -5,30 +5,53 @@ import { FormField } from '../../components/FormField';
 interface NewProductModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCreateProduct: (product: { name: string; sellPrice: number }) => void;
 }
 
-export const NewProductModal = ({ isOpen, onClose }: NewProductModalProps) => {
+export const NewProductModal = ({
+  isOpen,
+  onClose,
+  onCreateProduct,
+}: NewProductModalProps) => {
   const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [nameError, setNameError] = useState('');
+  const [sellPrice, setSellPrice] = useState('');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleSubmit = () => {
+    const newErrors: { [key: string]: string } = {};
+
     if (!name.trim()) {
-      setNameError('Please enter a product name');
+      newErrors.name = 'Please enter a name.';
+    }
+
+    if (!sellPrice.trim()) {
+      newErrors.sellPrice = 'Please enter a price.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    setNameError('');
+    onCreateProduct({ name: name.trim(), sellPrice: Number(sellPrice) });
+
     setName('');
-    setPrice('');
+    setSellPrice('');
+    setErrors({});
     onClose();
-    console.log({ name, price });
+  };
+
+  const handleClose = () => {
+    setName('');
+    setSellPrice('');
+    setErrors({});
+    onClose();
   };
 
   return (
     <FormModal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title='New Product'
       cancelLabel='Cancel'
       submitLabel='Save Product'
@@ -41,20 +64,22 @@ export const NewProductModal = ({ isOpen, onClose }: NewProductModalProps) => {
           value={name}
           onChange={(value) => {
             setName(value);
-            if (nameError) {
-              setNameError('');
-            }
+            setErrors((prev) => ({ ...prev, name: '' }));
           }}
-          error={nameError}
-          maxLength={50}
+          error={errors.name}
         />
 
         <FormField
           id='product-price'
           label='Price'
           type='number'
-          value={price}
-          onChange={setPrice}
+          prefix='$'
+          value={sellPrice}
+          onChange={(value) => {
+            setSellPrice(value);
+            setErrors((prev) => ({ ...prev, sellPrice: '' }));
+          }}
+          error={errors.sellPrice}
         />
       </div>
     </FormModal>
