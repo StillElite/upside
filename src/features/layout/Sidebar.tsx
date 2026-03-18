@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '../../components/Button';
 import { faCartShopping, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../types/products';
-import { useState } from 'react';
 
 interface SidebarProps {
   products: Product[];
