@@ -3,7 +3,7 @@ import { Sidebar } from './Sidebar';
 import { ProductView } from '../products/ProductView';
 import { PantryView } from '../pantry/PantryView';
 import { products as initialProducts } from '../../data/mockData';
-import { Product } from '../../types/products';
+import { IngredientItem, Product } from '../../types/products';
 import { NewProductModal } from '../products/NewProductModal';
 
 const AppLayout: React.FC = () => {
@@ -31,6 +31,24 @@ const AppLayout: React.FC = () => {
     setSelectedProductId(newProduct.id);
   };
 
+  const handleAddIngredient = (
+    productId: string,
+    newIngredient: IngredientItem,
+  ) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) => {
+        if (product.id !== productId) {
+          return product;
+        }
+
+        return {
+          ...product,
+          ingredients: [...product.ingredients, newIngredient],
+        };
+      }),
+    );
+  };
+
   return (
     <div className='h-dvh overflow-x-auto overflow-y-hidden bg-[#253a4b] p-6'>
       <div className='mx-auto flex h-full w-full max-w-[1500px] min-w-[1200px] overflow-hidden rounded-[32px]'>
@@ -54,7 +72,10 @@ const AppLayout: React.FC = () => {
           {activeView === 'pantry' ? (
             <PantryView />
           ) : (
-            <ProductView selectedProduct={selectedProduct} />
+            <ProductView
+              selectedProduct={selectedProduct}
+              onAddIngredient={handleAddIngredient}
+            />
           )}
         </main>
       </div>

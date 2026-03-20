@@ -6,7 +6,7 @@ export interface PanelCardProps {
 export const PanelCard = ({ title, children }: PanelCardProps) => {
   return (
     <section
-      className='rounded-lg border border-gray-200 bg-white p-4 shadow-sm text-[#2a3b4c]'
+      className='rounded-lg border border-gray-200 bg-white p-4 shadow-sm text-[#1c2b3d]'
       aria-labelledby={`${title}-heading`}
     >
       <div className='mb-4 border-b border-gray-300'>

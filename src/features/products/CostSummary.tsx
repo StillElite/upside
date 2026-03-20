@@ -17,39 +17,29 @@ export const CostSummary = ({ selectedProduct }: CostSummaryProps) => {
   const referenceCost = currentCost * 0.95;
   const drift = currentCost - referenceCost;
 
-  const rows = [
-    { label: 'Sell Price', value: selectedProduct.sellPrice },
-    { label: 'Current Cost', value: currentCost },
-    { label: 'Reference Cost', value: referenceCost },
-  ];
-
   return (
-    <ul className='space-y-3'>
-      <li className='flex justify-between text-sm'>
+    <ul className='space-y-3 text-[#1c2b3d]'>
+      <li className='flex justify-between '>
         <span className='text-neutral-500'>Current Cost</span>
-        <strong className='text-neutral-800'>{formatMoney(currentCost)}</strong>
+        <strong>{formatMoney(currentCost)}</strong>
       </li>
-      <li className='flex justify-between text-sm'>
+      <li className='flex justify-between '>
         <span className='text-neutral-500'>Sell Price</span>
-        <strong className='text-neutral-800'>
-          {formatMoney(selectedProduct.sellPrice)}
-        </strong>
+        <strong>{formatMoney(selectedProduct.sellPrice)}</strong>
       </li>
-      <li className='flex justify-between text-sm '>
-        <span className='text-[#1c2b3d] font-bold'>Profit Now</span>
+      <li className='flex justify-between  '>
+        <span className='font-bold'>Profit Now</span>
         <span className='text-[#315e88] font-bold text-lg'>
           {formatMoney(selectedProduct.sellPrice - currentCost)}
         </span>
       </li>
       <li className='h-[1px] bg-[#c6c8d2]/30 my-2' />
-      <li className='flex justify-between text-sm'>
+      <li className='flex justify-between '>
         <span className='text-neutral-500'>Reference Cost</span>
-        <strong className='text-neutral-800'>
-          {formatMoney(referenceCost)}
-        </strong>
+        <strong>{formatMoney(referenceCost)}</strong>
       </li>
-      <li className='flex justify-between text-sm '>
-        <span className='text-[#1c2b3d] font-bold'>Profit at Reference</span>
+      <li className='flex justify-between  '>
+        <span className='font-bold'>Profit at Reference</span>
         <span className='text-[#315e88] font-bold text-lg'>
           {formatMoney(selectedProduct.sellPrice - referenceCost)}
         </span>

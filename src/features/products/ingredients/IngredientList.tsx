@@ -4,17 +4,37 @@ import {
   faPlus,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
-import { Button } from '../../components/Button';
-import { IngredientItem } from '../../types/products';
-import { formatMoney } from '../../utils/formatMoney';
-import { useState } from 'react';
-import { AddIngredientModal } from './AddIngredientModal';
+import { Button } from '../../../components/Button';
+import { IngredientItem } from '../../../types/products';
+import { formatMoney } from '../../../utils/formatMoney';
+import { useRef, useState } from 'react';
+import { AddIngredientRow } from './AddIngredientRow';
 
 export interface IngredientListProps {
   ingredients: IngredientItem[];
+  onAddIngredient: (ingredient: IngredientItem) => void;
 }
-export const IngredientList = ({ ingredients }: IngredientListProps) => {
-  const [isAddIngredientOpen, setIsAddIngredientOpen] = useState(false);
+export const IngredientList = ({
+  ingredients,
+  onAddIngredient,
+}: IngredientListProps) => {
+  const [isAddingIngredient, setIsAddingIngredient] = useState(false);
+  const listRef = useRef<HTMLDivElement | null>(null);
+
+  const handleAddIngredient = (ingredient: IngredientItem) => {
+    onAddIngredient(ingredient);
+
+    requestAnimationFrame(() => {
+      if (!listRef.current) {
+        return;
+      }
+
+      listRef.current.scrollTo({
+        top: listRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    });
+  };
 
   return (
     <div className='flex flex-col flex-1 min-h-0'>
@@ -26,7 +46,7 @@ export const IngredientList = ({ ingredients }: IngredientListProps) => {
             text={'Add Ingredient'}
             className='text-xs'
             icon={faPlus}
-            onClick={() => setIsAddIngredientOpen(true)}
+            onClick={() => setIsAddingIngredient((prev) => !prev)}
           />
           <Button
             text={'Set Reference'}
@@ -36,13 +56,19 @@ export const IngredientList = ({ ingredients }: IngredientListProps) => {
             iconPosition='right'
           />
         </div>
-        <AddIngredientModal
-          isOpen={isAddIngredientOpen}
-          onClose={() => setIsAddIngredientOpen(false)}
-        />
       </div>
 
-      <div className='flex-1 min-h-0 overflow-y-auto custom-scrollbar'>
+      {isAddingIngredient && (
+        <AddIngredientRow
+          onAddIngredient={handleAddIngredient}
+          onCancel={() => setIsAddingIngredient(false)}
+        />
+      )}
+
+      <div
+        ref={listRef}
+        className='flex-1 min-h-0 overflow-y-auto custom-scrollbar'
+      >
         <ul className='text-[#1c2b3d]'>
           {ingredients.map((ingredient, index) => {
             const { id, name, quantity, unit, cost } = ingredient;
@@ -56,7 +82,11 @@ export const IngredientList = ({ ingredients }: IngredientListProps) => {
                     <span className='flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#315e88] text-white text-[14px] font-semibold'>
                       {numberDisplay}
                     </span>
-                    {name} - {quantityDisplay} -
+
+                    <strong>{name}</strong>
+                    <span>-</span>
+                    <span>{quantityDisplay}</span>
+                    <span>-</span>
                     <strong>{formatMoney(cost)}</strong>
                   </div>
                   <div className='flex items-center gap-3 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity'>

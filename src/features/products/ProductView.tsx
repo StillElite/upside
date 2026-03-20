@@ -1,19 +1,26 @@
 import { ProductDetails } from './ProductDetails';
-import { Product } from '../../types/products';
+import { IngredientItem, Product } from '../../types/products';
 import { Header } from '../../components/Header';
 import { ProductSidebar } from './ProductSidebar';
 
 export interface ProductViewProps {
   selectedProduct: Product;
+  onAddIngredient: (productId: string, newIngredient: IngredientItem) => void;
 }
 
-export const ProductView = ({ selectedProduct }: ProductViewProps) => {
+export const ProductView = ({
+  selectedProduct,
+  onAddIngredient,
+}: ProductViewProps) => {
   return (
     <div className='flex flex-col h-full min-h-0'>
       <Header title={selectedProduct.name} />
 
       <div className='flex-1 grid gap-6 grid-cols-[minmax(0,900px)_420px] 2xl:grid-cols-[minmax(0,900px)_480px] p-8 bg-[#f3f5f2] overflow-hidden'>
-        <ProductDetails selectedProduct={selectedProduct} />
+        <ProductDetails
+          selectedProduct={selectedProduct}
+          onAddIngredient={onAddIngredient}
+        />
         <ProductSidebar selectedProduct={selectedProduct} />
       </div>
     </div>
