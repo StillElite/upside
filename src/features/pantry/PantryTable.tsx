@@ -73,7 +73,6 @@ export const PantryTable = ({ ingredients }: PantryTableProps) => {
               </tr>
             ))}
           </tbody>
-          <caption className='sr-only'>Pantry ingredients and costs</caption>
         </table>
       </div>
     </>

@@ -6,7 +6,7 @@ import {
   faSearch,
 } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../types/products';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface SidebarProps {
   products: Product[];
@@ -26,6 +26,7 @@ export const Sidebar = ({
   onAddProduct,
 }: SidebarProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   const asideClasses =
     'flex h-full w-72 flex-col overflow-hidden border-r border-slate-700 bg-[#2f4559] text-white';
@@ -33,6 +34,19 @@ export const Sidebar = ({
   const filteredProducts = products.filter((products) =>
     products.name.toLowerCase().includes(searchTerm.trim().toLowerCase()),
   );
+
+  const handleScrollProducts = () => {
+    requestAnimationFrame(() => {
+      if (!listRef.current) {
+        return;
+      }
+
+      listRef.current.scrollTo({
+        top: listRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    });
+  };
 
   return (
     <aside className={asideClasses} aria-label='Sidebar navigation'>
@@ -66,7 +80,9 @@ export const Sidebar = ({
             type='text'
             placeholder='Search...'
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
             className='w-full rounded-md border border-white/10 bg-[#284760] pl-9 pr-3 py-2 text-sm text-white outline-none placeholder:text-slate-300 focus:border-[#6f95b8] focus:ring-2 focus:ring-[#6f95b8]/30'
           />
         </div>
@@ -91,7 +107,7 @@ export const Sidebar = ({
           />
           PANTRY
         </button>
-        <div className='flex-1 overflow-y-auto custom-scrollbar'>
+        <div ref={listRef} className='flex-1 overflow-y-auto custom-scrollbar'>
           <ul>
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => {
@@ -108,6 +124,7 @@ export const Sidebar = ({
                       }`}
                       onClick={() => {
                         setSelectedProductId(product.id);
+                        handleScrollProducts();
                         setActiveView('product');
                         setSearchTerm('');
                       }}
