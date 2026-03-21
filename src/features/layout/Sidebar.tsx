@@ -55,7 +55,7 @@ export const Sidebar = ({
       </div>
       <div className='flex flex-col justify-center pt-5 pb-4 px-4 gap-5'>
         <Button
-          text={'New Product'}
+          text='New Product'
           className='w-full'
           icon={faPlus}
           onClick={(e) => {

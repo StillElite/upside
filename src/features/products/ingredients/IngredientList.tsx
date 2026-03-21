@@ -1,7 +1,7 @@
 import {
   faCaretRight,
   faPen,
-  faPlus,
+  faCaretDown,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../../components/Button';
@@ -43,9 +43,10 @@ export const IngredientList = ({
 
         <div className='flex gap-2'>
           <Button
-            text={'Add Ingredient'}
+            text='Add Ingredient'
             className='text-xs'
-            icon={faPlus}
+            icon={isAddingIngredient ? faCaretDown : faCaretRight}
+            iconPosition='right'
             onClick={() => setIsAddingIngredient((prev) => !prev)}
           />
           <Button
