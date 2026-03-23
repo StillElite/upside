@@ -5,17 +5,27 @@ import { PantryView } from '../pantry/PantryView';
 import { products as initialProducts } from '../../data/mockData';
 import { IngredientItem, Product } from '../../types/products';
 import { NewProductModal } from '../products/NewProductModal';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from '../../store/store';
+import { setSelectedProductId } from '../../store/slices/productSlice';
 
 const AppLayout: React.FC = () => {
   const [activeView, setActiveView] = useState<'product' | 'pantry'>('product');
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(
-    initialProducts[0].id,
+
+  const dispatch = useDispatch<AppDispatch>();
+  const selectedProductIdFromStore = useSelector(
+    (state: RootState) => state.products.selectedProductId,
   );
+
+  const handleSelectedProductChange = (productId: string | null) => {
+    dispatch(setSelectedProductId(productId));
+  };
+
   const [isNewProductOpen, setIsNewProductOpen] = useState(false);
 
   const selectedProduct =
-    products.find((p) => p.id === selectedProductId) ?? products[0];
+    products.find((p) => p.id === selectedProductIdFromStore) ?? products[0];
 
   const handleCreateProduct = (newProductData: {
     name: string;
@@ -28,7 +38,8 @@ const AppLayout: React.FC = () => {
       ingredients: [],
     };
     setProducts((prev) => [newProduct, ...prev]);
-    setSelectedProductId(newProduct.id);
+
+    dispatch(setSelectedProductId(newProduct.id));
   };
 
   const handleAddIngredient = (
@@ -54,9 +65,9 @@ const AppLayout: React.FC = () => {
       <div className='mx-auto flex h-full w-full max-w-[1500px] min-w-[1200px] overflow-hidden rounded-[32px]'>
         <Sidebar
           products={products}
-          selectedProductId={selectedProductId}
+          selectedProductId={selectedProductIdFromStore}
           activeView={activeView}
-          setSelectedProductId={setSelectedProductId}
+          setSelectedProductId={handleSelectedProductChange}
           setActiveView={setActiveView}
           onAddProduct={() => setIsNewProductOpen(true)}
         />

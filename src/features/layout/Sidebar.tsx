@@ -6,7 +6,7 @@ import {
   faSearch,
 } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../types/products';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface SidebarProps {
   products: Product[];
@@ -26,7 +26,7 @@ export const Sidebar = ({
   onAddProduct,
 }: SidebarProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const listRef = useRef<HTMLDivElement | null>(null);
+  const selectedItemRef = useRef<HTMLLIElement | null>(null);
 
   const asideClasses =
     'flex h-full w-72 flex-col overflow-hidden border-r border-slate-700 bg-[#2f4559] text-white';
@@ -35,18 +35,16 @@ export const Sidebar = ({
     products.name.toLowerCase().includes(searchTerm.trim().toLowerCase()),
   );
 
-  const handleScrollProducts = () => {
-    requestAnimationFrame(() => {
-      if (!listRef.current) {
-        return;
-      }
+  useEffect(() => {
+    if (!selectedItemRef.current) {
+      return;
+    }
 
-      listRef.current.scrollTo({
-        top: listRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
+    selectedItemRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
     });
-  };
+  });
 
   return (
     <aside className={asideClasses} aria-label='Sidebar navigation'>
@@ -107,14 +105,20 @@ export const Sidebar = ({
           />
           PANTRY
         </button>
-        <div ref={listRef} className='flex-1 overflow-y-auto custom-scrollbar'>
+        <div className='flex-1 overflow-y-auto custom-scrollbar'>
           <ul>
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => {
                 const isActive = selectedProductId === product.id;
 
                 return (
-                  <li key={product.id} className='border-t border-white/10'>
+                  <li
+                    key={product.id}
+                    ref={
+                      selectedProductId === product.id ? selectedItemRef : null
+                    }
+                    className='border-t border-white/10'
+                  >
                     <button
                       type='button'
                       className={`w-full py-3 pl-12 text-left transition-colors ${
@@ -124,7 +128,6 @@ export const Sidebar = ({
                       }`}
                       onClick={() => {
                         setSelectedProductId(product.id);
-                        handleScrollProducts();
                         setActiveView('product');
                         setSearchTerm('');
                       }}
