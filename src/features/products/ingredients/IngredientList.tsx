@@ -9,20 +9,31 @@ import { IngredientItem } from '../../../types/products';
 import { formatMoney } from '../../../utils/formatMoney';
 import { useRef, useState } from 'react';
 import { AddIngredientRow } from './AddIngredientRow';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../store/store';
+import { addIngredientToProduct } from '../../../store/slices/productSlice';
 
 export interface IngredientListProps {
   ingredients: IngredientItem[];
-  onAddIngredient: (ingredient: IngredientItem) => void;
 }
-export const IngredientList = ({
-  ingredients,
-  onAddIngredient,
-}: IngredientListProps) => {
+export const IngredientList = ({ ingredients }: IngredientListProps) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [isAddingIngredient, setIsAddingIngredient] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
 
+  const selectedProductId = useSelector(
+    (state: RootState) => state.products.selectedProductId,
+  );
+
   const handleAddIngredient = (ingredient: IngredientItem) => {
-    onAddIngredient(ingredient);
+    if (!selectedProductId) return;
+
+    dispatch(
+      addIngredientToProduct({
+        productId: selectedProductId,
+        newIngredient: ingredient,
+      }),
+    );
 
     requestAnimationFrame(() => {
       if (!listRef.current) {

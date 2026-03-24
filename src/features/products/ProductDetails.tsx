@@ -1,16 +1,12 @@
-import { IngredientItem, Product } from '../../types/products';
+import { Product } from '../../types/products';
 import { formatMoney } from '../../utils/formatMoney';
 import { IngredientList } from './ingredients/IngredientList';
 
 export interface ProductDetailsProps {
   selectedProduct: Product;
-  onAddIngredient: (productId: string, newIngredient: IngredientItem) => void;
 }
 
-export const ProductDetails = ({
-  selectedProduct,
-  onAddIngredient,
-}: ProductDetailsProps) => {
+export const ProductDetails = ({ selectedProduct }: ProductDetailsProps) => {
   const sellPrice = formatMoney(selectedProduct.sellPrice);
 
   return (
@@ -24,12 +20,7 @@ export const ProductDetails = ({
           className='relative z-0 peer bg-white font-semibold ml-2 pl-2 border border-gray-300 rounded-md text-base text-[#1c2b3d] h-8 w-60'
         />
       </div>
-      <IngredientList
-        ingredients={selectedProduct.ingredients}
-        onAddIngredient={(newIngredient) =>
-          onAddIngredient(selectedProduct.id, newIngredient)
-        }
-      />
+      <IngredientList ingredients={selectedProduct.ingredients} />
 
       <footer className='shrink-0 pt-6 pb-2 mt-auto border-t border-[#c6c8d2]/40'>
         <p className='text-[#1c2b3d]/50 italic text-[13px] tracking-wide'>

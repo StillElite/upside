@@ -2,30 +2,28 @@ import { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { ProductView } from '../products/ProductView';
 import { PantryView } from '../pantry/PantryView';
-import { products as initialProducts } from '../../data/mockData';
 import { IngredientItem, Product } from '../../types/products';
 import { NewProductModal } from '../products/NewProductModal';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../../store/store';
-import { setSelectedProductId } from '../../store/slices/productSlice';
+import {
+  addProduct,
+  setSelectedProductId,
+} from '../../store/slices/productSlice';
 
 const AppLayout: React.FC = () => {
-  const [activeView, setActiveView] = useState<'product' | 'pantry'>('product');
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-
   const dispatch = useDispatch<AppDispatch>();
-  const selectedProductIdFromStore = useSelector(
+  const products = useSelector((state: RootState) => state.products.products);
+  const selectedProductId = useSelector(
     (state: RootState) => state.products.selectedProductId,
   );
-
-  const handleSelectedProductChange = (productId: string | null) => {
-    dispatch(setSelectedProductId(productId));
-  };
-
+  const [activeView, setActiveView] = useState<'product' | 'pantry'>('product');
   const [isNewProductOpen, setIsNewProductOpen] = useState(false);
 
   const selectedProduct =
-    products.find((p) => p.id === selectedProductIdFromStore) ?? products[0];
+    selectedProductId === null
+      ? null
+      : products.find((product) => product.id === selectedProductId) || null;
 
   const handleCreateProduct = (newProductData: {
     name: string;
@@ -37,27 +35,9 @@ const AppLayout: React.FC = () => {
       sellPrice: newProductData.sellPrice,
       ingredients: [],
     };
-    setProducts((prev) => [newProduct, ...prev]);
+    dispatch(addProduct(newProduct));
 
     dispatch(setSelectedProductId(newProduct.id));
-  };
-
-  const handleAddIngredient = (
-    productId: string,
-    newIngredient: IngredientItem,
-  ) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) => {
-        if (product.id !== productId) {
-          return product;
-        }
-
-        return {
-          ...product,
-          ingredients: [...product.ingredients, newIngredient],
-        };
-      }),
-    );
   };
 
   return (
@@ -65,9 +45,11 @@ const AppLayout: React.FC = () => {
       <div className='mx-auto flex h-full w-full max-w-[1500px] min-w-[1200px] overflow-hidden rounded-[32px]'>
         <Sidebar
           products={products}
-          selectedProductId={selectedProductIdFromStore}
+          selectedProductId={selectedProductId}
           activeView={activeView}
-          setSelectedProductId={handleSelectedProductChange}
+          setSelectedProductId={(productId) =>
+            dispatch(setSelectedProductId(productId))
+          }
           setActiveView={setActiveView}
           onAddProduct={() => setIsNewProductOpen(true)}
         />
@@ -83,10 +65,7 @@ const AppLayout: React.FC = () => {
           {activeView === 'pantry' ? (
             <PantryView />
           ) : (
-            <ProductView
-              selectedProduct={selectedProduct}
-              onAddIngredient={handleAddIngredient}
-            />
+            <ProductView selectedProduct={selectedProduct} />
           )}
         </main>
       </div>

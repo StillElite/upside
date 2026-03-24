@@ -26,7 +26,7 @@ export const AddIngredientRow = ({
 
   const addButtonClasses = isValid
     ? 'w-6 h-6 rounded-full bg-[#305e88] text-white hover:bg-[#274f72]'
-    : 'w-6 h-6 rounded-full bg-slate-200 text-slate-400 cursor-not-allowed';
+    : 'w-6 h-6 rounded-full bg-slate-200 text-slate-400';
 
   const handleSaveIngredient = () => {
     if (!ingredientName.trim() || !quantity.trim() || !unit.trim()) {
@@ -46,7 +46,6 @@ export const AddIngredientRow = ({
     setIngredientName('');
     setQuantity('');
     setUnit('');
-    onCancel();
   };
 
   return (
@@ -85,6 +84,7 @@ export const AddIngredientRow = ({
             variant='icon-only'
             className={addButtonClasses}
             aria-label='Save ingredient'
+            disabled={!isValid}
             onClick={handleSaveIngredient}
           />
 
