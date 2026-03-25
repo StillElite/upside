@@ -5,26 +5,26 @@ import {
   faPlus,
   faSearch,
 } from '@fortawesome/free-solid-svg-icons';
-import { Product } from '../../types/products';
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { setSelectedProductId } from '../../store/slices/productSlice';
 
 interface SidebarProps {
-  products: Product[];
-  selectedProductId: string | null;
   activeView: 'product' | 'pantry';
-  setSelectedProductId: (productId: string | null) => void;
   setActiveView: (viewName: 'product' | 'pantry') => void;
   onAddProduct: () => void;
 }
 
 export const Sidebar = ({
-  products,
-  selectedProductId,
   activeView,
-  setSelectedProductId,
   setActiveView,
   onAddProduct,
 }: SidebarProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { products, selectedProductId } = useSelector(
+    (state: RootState) => state.products,
+  );
   const [searchTerm, setSearchTerm] = useState<string>('');
   const selectedItemRef = useRef<HTMLLIElement | null>(null);
 
@@ -44,7 +44,7 @@ export const Sidebar = ({
       behavior: 'smooth',
       block: 'nearest',
     });
-  });
+  }, [selectedProductId]);
 
   return (
     <aside className={asideClasses} aria-label='Sidebar navigation'>
@@ -95,7 +95,7 @@ export const Sidebar = ({
           }`}
           onClick={() => {
             setActiveView('pantry');
-            setSelectedProductId(null);
+            dispatch(setSelectedProductId(null));
           }}
         >
           <FontAwesomeIcon
@@ -127,7 +127,7 @@ export const Sidebar = ({
                           : 'text-slate-300 hover:bg-[#274f72] hover:text-white'
                       }`}
                       onClick={() => {
-                        setSelectedProductId(product.id);
+                        dispatch(setSelectedProductId(product.id));
                         setActiveView('product');
                         setSearchTerm('');
                       }}

@@ -1,13 +1,19 @@
 import { ProductDetails } from './ProductDetails';
-import { Product } from '../../types/products';
 import { Header } from '../../components/Header';
 import { ProductSidebar } from './ProductSidebar';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
-export interface ProductViewProps {
-  selectedProduct: Product | null;
-}
+export const ProductView = () => {
+  const products = useSelector((state: RootState) => state.products.products);
+  const selectedProductId = useSelector(
+    (state: RootState) => state.products.selectedProductId,
+  );
 
-export const ProductView = ({ selectedProduct }: ProductViewProps) => {
+  const selectedProduct =
+    selectedProductId === null
+      ? null
+      : products.find((products) => products.id === selectedProductId) || null;
   if (!selectedProduct) {
     return null;
   }
