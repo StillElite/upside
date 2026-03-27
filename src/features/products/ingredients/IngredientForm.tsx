@@ -29,7 +29,14 @@ export const IngredientForm = ({
     : 'w-6 h-6 rounded-full bg-slate-200 text-slate-400';
 
   return (
-    <>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!isValid) return;
+        onSave();
+      }}
+      className='flex w-full items-center justify-between'
+    >
       <div className='flex flex-1 items-center gap-3'>
         <input
           id='ingredient-name'
@@ -64,13 +71,12 @@ export const IngredientForm = ({
 
       <div className='flex items-center gap-2'>
         <Button
-          type='button'
+          type='submit'
           icon={faPlus}
           variant='icon-only'
           className={addButtonClasses}
           aria-label='Save ingredient'
           disabled={!isValid}
-          onClick={onSave}
         />
 
         <Button
@@ -82,6 +88,6 @@ export const IngredientForm = ({
           onClick={onCancel}
         />
       </div>
-    </>
+    </form>
   );
 };

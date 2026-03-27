@@ -1,13 +1,45 @@
+import { useState } from 'react';
 import { Button } from '../../components/Button';
+import { ConfirmModal } from '../../components/ConfirmModal';
 import { PanelCard } from '../../components/PanelCard';
-import { Product } from '../../types/products';
 import { CostSummary } from './CostSummary';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import {
+  deleteProduct,
+  setSelectedProductId,
+} from '../../store/slices/productSlice';
 
-export interface ProductSidebarProps {
-  selectedProduct: Product;
-}
+export const ProductSidebar = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { products, selectedProductId } = useSelector(
+    (state: RootState) => state.products,
+  );
 
-export const ProductSidebar = ({ selectedProduct }: ProductSidebarProps) => {
+  const selectedProduct =
+    products.find((p) => p.id === selectedProductId) ?? null;
+
+  if (!selectedProduct) return null;
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const confirmMessage = (
+    <>
+      Are you sure you want to delete <strong>{selectedProduct.name}</strong>?
+    </>
+  );
+
+  const handleDeleteProduct = () => {
+    dispatch(deleteProduct({ productId: selectedProduct.id }));
+
+    const remainingProducts = products.filter(
+      (product) => product.id !== selectedProduct.id,
+    );
+
+    const nextSelectedId = remainingProducts[0]?.id ?? null;
+    dispatch(setSelectedProductId(nextSelectedId));
+
+    setIsConfirmOpen(false);
+  };
   return (
     <div className='flex flex-col gap-2'>
       <PanelCard title='Cost & Profit'>
@@ -19,6 +51,15 @@ export const ProductSidebar = ({ selectedProduct }: ProductSidebarProps) => {
           text='Delete Recipe'
           variant='destructive'
           aria-label={`Delete ${selectedProduct.name}`}
+          onClick={() => setIsConfirmOpen(true)}
+        />
+        <ConfirmModal
+          isOpen={isConfirmOpen}
+          onClose={() => setIsConfirmOpen(false)}
+          onConfirm={handleDeleteProduct}
+          title='Delete Product'
+          confirmLabel='Delete'
+          message={confirmMessage}
         />
       </PanelCard>
     </div>

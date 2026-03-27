@@ -23,7 +23,7 @@ export const ProductView = () => {
 
       <div className='flex-1 grid gap-6 grid-cols-[minmax(0,900px)_420px] 2xl:grid-cols-[minmax(0,900px)_480px] p-8 bg-[#f3f5f2] overflow-hidden'>
         <ProductDetails selectedProduct={selectedProduct} />
-        <ProductSidebar selectedProduct={selectedProduct} />
+        <ProductSidebar />
       </div>
     </div>
   );

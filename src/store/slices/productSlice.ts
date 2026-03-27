@@ -16,6 +16,15 @@ interface UpdateIngredientPayload {
   updatedIngredient: IngredientItem;
 }
 
+interface DeleteProductPayload {
+  productId: string;
+}
+
+interface DeleteIngredientPayload {
+  productId: string;
+  ingredientId: string;
+}
+
 const initialState: ProductState = {
   products,
   selectedProductId: products[0].id,
@@ -27,6 +36,12 @@ const productSlice = createSlice({
   reducers: {
     addProduct: (state, action: PayloadAction<Product>) => {
       state.products.unshift(action.payload);
+    },
+
+    deleteProduct: (state, action: PayloadAction<DeleteProductPayload>) => {
+      state.products = state.products.filter(
+        (product) => product.id !== action.payload.productId,
+      );
     },
     setSelectedProductId: (state, action: PayloadAction<string | null>) => {
       state.selectedProductId = action.payload;
@@ -53,13 +68,29 @@ const productSlice = createSlice({
       ingredient.unit = updatedIngredient.unit;
       ingredient.cost = updatedIngredient.cost;
     },
+    deleteIngredient: (
+      state,
+      action: PayloadAction<DeleteIngredientPayload>,
+    ) => {
+      const { productId, ingredientId } = action.payload;
+
+      const product = state.products.find((item) => item.id === productId);
+
+      if (!product) return;
+
+      product.ingredients = product.ingredients.filter(
+        (ingredient) => ingredient.id !== ingredientId,
+      );
+    },
   },
 });
 
 export const {
   addProduct,
+  deleteProduct,
   setSelectedProductId,
   addIngredient,
   editIngredient,
+  deleteIngredient,
 } = productSlice.actions;
 export default productSlice.reducer;
