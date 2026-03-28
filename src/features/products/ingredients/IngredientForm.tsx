@@ -1,10 +1,14 @@
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../../components/Button';
+import CreatableSelect from 'react-select/creatable';
+import type { SingleValue } from 'react-select';
 
 export interface IngredientFormProps {
   ingredientName: string;
   quantity: string;
   unit: string;
+  options: IngredientOption[];
+  setOptions: React.Dispatch<React.SetStateAction<IngredientOption[]>>;
   onIngredientNameChange: (value: string) => void;
   onQuantityChange: (value: string) => void;
   onUnitChange: (value: string) => void;
@@ -13,10 +17,17 @@ export interface IngredientFormProps {
   isValid: boolean;
 }
 
+type IngredientOption = {
+  value: string;
+  label: string;
+};
+
 export const IngredientForm = ({
   ingredientName,
   quantity,
   unit,
+  options,
+  setOptions,
   onIngredientNameChange,
   onQuantityChange,
   onUnitChange,
@@ -28,6 +39,25 @@ export const IngredientForm = ({
     ? 'w-6 h-6 rounded-full bg-[#305e88] text-white hover:bg-[#274f72]'
     : 'w-6 h-6 rounded-full bg-slate-200 text-slate-400';
 
+  const selectedOption = ingredientName
+    ? {
+        value: ingredientName,
+        label: ingredientName,
+      }
+    : null;
+
+  const createOption = (label: string): IngredientOption => ({
+    label,
+    value: label.toLowerCase().replace(/\W/g, ''),
+  });
+  const handleCreate = (inputValue: any) => {
+    const newOption = createOption(inputValue);
+
+    setOptions((prevOptions) => [...prevOptions, newOption]);
+
+    onIngredientNameChange(newOption.label);
+  };
+
   return (
     <form
       onSubmit={(e) => {
@@ -38,15 +68,16 @@ export const IngredientForm = ({
       className='flex w-full items-center justify-between'
     >
       <div className='flex flex-1 items-center gap-3'>
-        <input
-          id='ingredient-name'
-          type='text'
-          placeholder='Name'
-          value={ingredientName}
-          onChange={(e) => onIngredientNameChange(e.target.value)}
-          className='min-w-[140px] rounded-md border border-[#c6c8d2] px-2 py-1 text-sm'
+        <CreatableSelect
+          isClearable
+          onChange={(newValue: SingleValue<IngredientOption>) =>
+            onIngredientNameChange(newValue?.label ?? '')
+          }
+          onCreateOption={handleCreate}
+          options={options}
+          value={selectedOption}
+          className='min-w-[140px] rounded-md px-2 py-1 text-sm'
         />
-
         <span>-</span>
 
         <input

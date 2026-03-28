@@ -1,6 +1,6 @@
 import { Product } from '../../types/products';
 import { formatMoney } from '../../utils/formatMoney';
-import { IngredientList } from './ingredients/IngredientList';
+import { IngredientList } from './ingredients/IngredientSection';
 
 export interface ProductDetailsProps {
   selectedProduct: Product;

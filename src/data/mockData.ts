@@ -241,7 +241,7 @@ export const products: Product[] = [
 // Pantry
 // -----------------------
 
-export const pantryIngredients = [
+export const pantryItems = [
   {
     id: 1,
     name: 'All-Purpose Flour',

@@ -1,4 +1,4 @@
-export interface PantryIngredient {
+export interface PantryItems {
   id: number;
   name: string;
   packageSize: number;
