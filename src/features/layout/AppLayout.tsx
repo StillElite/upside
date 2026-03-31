@@ -10,6 +10,7 @@ import {
   addProduct,
   setSelectedProductId,
 } from '../../store/slices/productSlice';
+import toast from 'react-hot-toast';
 
 const AppLayout: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,6 +30,8 @@ const AppLayout: React.FC = () => {
     dispatch(addProduct(newProduct));
 
     dispatch(setSelectedProductId(newProduct.id));
+
+    toast.success(`${newProduct.name} added successfully`);
   };
 
   return (

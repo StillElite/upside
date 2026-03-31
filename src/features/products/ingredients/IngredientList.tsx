@@ -3,7 +3,7 @@ import { Button } from '../../../components/Button';
 import { formatMoney } from '../../../utils/formatMoney';
 import { IngredientForm } from './IngredientForm';
 import { IngredientItem } from '../../../types/products';
-import { SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
 import {
@@ -11,12 +11,22 @@ import {
   editIngredient,
 } from '../../../store/slices/productSlice';
 import { ConfirmModal } from '../../../components/ConfirmModal';
+import type { IngredientOption } from './IngredientSection';
+import toast from 'react-hot-toast';
 
-export interface IngredientRowProps {
+export interface IngredientListProps {
   ingredients: IngredientItem[];
+  ingredientOptions: IngredientOption[];
+  isAddingIngredient: boolean;
+  onEditingChange: (isEditing: boolean) => void;
 }
 
-export const IngredientRow = ({ ingredients }: IngredientRowProps) => {
+export const IngredientList = ({
+  ingredients,
+  ingredientOptions,
+  isAddingIngredient,
+  onEditingChange,
+}: IngredientListProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedProductId = useSelector(
     (state: RootState) => state.products.selectedProductId,
@@ -37,38 +47,12 @@ export const IngredientRow = ({ ingredients }: IngredientRowProps) => {
     editQuantity.trim() !== '' &&
     editUnit.trim() !== '';
 
-  const handleSaveEdit = () => {
-    if (!selectedProductId || !editingIngredientId) {
-      return;
-    }
-
-    if (!isEditIngredientValid) {
-      return;
-    }
-
-    const updatedIngredient: IngredientItem = {
-      id: editingIngredientId,
-      name: editIngredientName.trim(),
-      quantity: Number(editQuantity),
-      unit: editUnit.trim(),
-      cost: 0,
-    };
-
-    dispatch(
-      editIngredient({
-        productId: selectedProductId,
-        updatedIngredient,
-      }),
-    );
-
-    handleCancelIngredientForm();
-  };
-
   const handleStartEdit = (ingredient: IngredientItem) => {
     setEditingIngredientId(ingredient.id);
     setEditIngredientName(ingredient.name);
     setEditQuantity(ingredient.quantity.toString());
     setEditUnit(ingredient.unit);
+    onEditingChange(true);
   };
 
   const handleCancelIngredientForm = () => {
@@ -76,20 +60,44 @@ export const IngredientRow = ({ ingredients }: IngredientRowProps) => {
     setEditIngredientName('');
     setEditQuantity('');
     setEditUnit('');
+    onEditingChange(false);
+  };
+
+  const handleSaveEdit = () => {
+    if (!selectedProductId || !editingIngredientId || !isEditIngredientValid)
+      return;
+
+    dispatch(
+      editIngredient({
+        productId: selectedProductId,
+        updatedIngredient: {
+          id: editingIngredientId,
+          name: editIngredientName.trim(),
+          quantity: Number(editQuantity),
+          unit: editUnit.trim(),
+          cost: 0,
+        },
+      }),
+    );
+
+    toast.success(`Ingredient updated successfully`);
+
+    handleCancelIngredientForm();
   };
 
   const handleDeleteIngredient = () => {
-    if (!ingredientToDelete || !selectedProductId) return;
+    if (!selectedProductId || !ingredientToDelete) return;
 
-    const deletedIngredient = {
-      productId: selectedProductId,
-      ingredientId: ingredientToDelete.id,
-    };
+    dispatch(
+      deleteIngredient({
+        productId: selectedProductId,
+        ingredientId: ingredientToDelete.id,
+      }),
+    );
+    toast.success(`Ingredient deleted successfully`);
 
-    dispatch(deleteIngredient(deletedIngredient));
-
-    setIsConfirmOpen(false);
     setIngredientToDelete(null);
+    setIsConfirmOpen(false);
   };
 
   const confirmMessage = (
@@ -98,6 +106,7 @@ export const IngredientRow = ({ ingredients }: IngredientRowProps) => {
       <strong>{ingredientToDelete?.name}</strong>?
     </>
   );
+
   return (
     <>
       <ul className='text-[#1c2b3d]'>
@@ -115,12 +124,7 @@ export const IngredientRow = ({ ingredients }: IngredientRowProps) => {
                     ingredientName={editIngredientName}
                     quantity={editQuantity}
                     unit={editUnit}
-                    options={[]}
-                    setOptions={function (
-                      value: SetStateAction<{ value: string; label: string }[]>,
-                    ): void {
-                      throw new Error('Function not implemented.');
-                    }}
+                    options={ingredientOptions}
                     onIngredientNameChange={setEditIngredientName}
                     onQuantityChange={setEditQuantity}
                     onUnitChange={setEditUnit}
@@ -141,14 +145,24 @@ export const IngredientRow = ({ ingredients }: IngredientRowProps) => {
                       <strong>{formatMoney(cost)}</strong>
                     </div>
 
-                    <div className='ebo flex items-center gap-3 group-focus-within:opacity-100 transition-opacity'>
-                      <Button
-                        icon={faPen}
-                        variant='icon-only'
-                        className='text-gray-400 hover:text-[#305e88]'
-                        aria-label={`Edit ${name}`}
-                        onClick={() => handleStartEdit(ingredient)}
-                      />
+                    <div className='flex items-center gap-3 group-focus-within:opacity-100 transition-opacity'>
+                      <div className='relative group/button'>
+                        <Button
+                          icon={faPen}
+                          variant='icon-only'
+                          className='text-gray-400 hover:text-[#305e88]'
+                          aria-label={`Edit ${name}`}
+                          onClick={() => handleStartEdit(ingredient)}
+                          disabled={isAddingIngredient}
+                        />
+                        {isAddingIngredient && (
+                          <span
+                            className={`absolute right-0 bottom-full w-max whitespace-normal rounded bg-slate-800 text-white px-2 py-1 text-xs opacity-0 translate-y-3 group-hover/button:opacity-100 group-hover:translate-y-3 transition-all duration-200 ease-out z-10 shadow-lg`}
+                          >
+                            Complete or cancel the current form
+                          </span>
+                        )}
+                      </div>
                       <Button
                         icon={faTrash}
                         variant='icon-only'

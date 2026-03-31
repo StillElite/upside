@@ -8,7 +8,6 @@ export interface IngredientFormProps {
   quantity: string;
   unit: string;
   options: IngredientOption[];
-  setOptions: React.Dispatch<React.SetStateAction<IngredientOption[]>>;
   onIngredientNameChange: (value: string) => void;
   onQuantityChange: (value: string) => void;
   onUnitChange: (value: string) => void;
@@ -27,7 +26,6 @@ export const IngredientForm = ({
   quantity,
   unit,
   options,
-  setOptions,
   onIngredientNameChange,
   onQuantityChange,
   onUnitChange,
@@ -46,16 +44,8 @@ export const IngredientForm = ({
       }
     : null;
 
-  const createOption = (label: string): IngredientOption => ({
-    label,
-    value: label.toLowerCase().replace(/\W/g, ''),
-  });
-  const handleCreate = (inputValue: any) => {
-    const newOption = createOption(inputValue);
-
-    setOptions((prevOptions) => [...prevOptions, newOption]);
-
-    onIngredientNameChange(newOption.label);
+  const handleCreate = (inputValue: string) => {
+    onIngredientNameChange(inputValue);
   };
 
   return (

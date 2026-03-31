@@ -9,6 +9,7 @@ import {
   deleteProduct,
   setSelectedProductId,
 } from '../../store/slices/productSlice';
+import toast from 'react-hot-toast';
 
 export const ProductSidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,6 +38,8 @@ export const ProductSidebar = () => {
 
     const nextSelectedId = remainingProducts[0]?.id ?? null;
     dispatch(setSelectedProductId(nextSelectedId));
+
+    toast.success(`Product deleted successfully`);
 
     setIsConfirmOpen(false);
   };
