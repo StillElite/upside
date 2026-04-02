@@ -1,10 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { PantryItems } from '../../types/pantry';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PantryItem } from '../../types/pantry';
 import { pantryItems } from '../../data/mockData';
 
 interface PantryState {
-  pantryItems: PantryItems[];
+  pantryItems: PantryItem[];
 }
+
+// interface AddItemPayload {
+//   itemId: string;
+//   newItem: PantryItem;
+// }
 
 const initialState: PantryState = {
   pantryItems,
@@ -13,8 +18,12 @@ const initialState: PantryState = {
 const pantrySlice = createSlice({
   name: 'pantry',
   initialState,
-  reducers: {},
+  reducers: {
+    addItem: (state, action: PayloadAction<PantryItem>) => {
+      state.pantryItems.unshift(action.payload);
+    },
+  },
 });
 
-export const {} = pantrySlice.actions;
+export const { addItem } = pantrySlice.actions;
 export default pantrySlice.reducer;

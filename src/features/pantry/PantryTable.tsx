@@ -1,9 +1,9 @@
-import { PantryIngredient } from '../../types/pantry';
+import { PantryItem } from '../../types/pantry';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../components/Button';
 
 interface PantryTableProps {
-  ingredients: PantryIngredient[];
+  ingredients: PantryItem[];
 }
 
 export const PantryTable = ({ ingredients }: PantryTableProps) => {

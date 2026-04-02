@@ -63,6 +63,16 @@ export const IngredientForm = ({
           onChange={(newValue: SingleValue<IngredientOption>) =>
             onIngredientNameChange(newValue?.label ?? '')
           }
+          styles={{
+            control: (base, state) => ({
+              ...base,
+              borderColor: state.isFocused ? '#305e88' : base.borderColor,
+              boxShadow: state.isFocused ? '0 0 0 2px #305e88' : base.boxShadow,
+              '&:hover': {
+                borderColor: state.isFocused ? '#305e88' : base.borderColor,
+              },
+            }),
+          }}
           onCreateOption={handleCreate}
           options={options}
           value={selectedOption}
@@ -77,7 +87,7 @@ export const IngredientForm = ({
           value={quantity}
           onChange={(e) => onQuantityChange(e.target.value)}
           min={1}
-          className='w-20 rounded-md border border-[#c6c8d2] px-2 py-1 text-sm'
+          className='h-[38px] w-28 rounded-[4px] border border-[#c6c8d2] px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#305e88] focus:border-[#305e88]'
         />
 
         <input
@@ -86,7 +96,7 @@ export const IngredientForm = ({
           placeholder='Unit'
           value={unit}
           onChange={(e) => onUnitChange(e.target.value)}
-          className='w-24 rounded-md border border-[#c6c8d2] px-2 py-1 text-sm'
+          className='h-[38px] w-28 rounded-[4px] border border-[#c6c8d2] px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#305e88] focus:border-[#305e88]'
         />
       </div>
 

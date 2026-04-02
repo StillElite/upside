@@ -8,6 +8,7 @@ interface FormFieldProps {
   error?: string;
   maxLength?: number;
   type?: 'text' | 'number';
+  step?: number | 'any';
   placeholder?: string;
   min?: number | string;
   max?: number | string;
@@ -23,6 +24,7 @@ export const FormField = ({
   error,
   maxLength,
   type = 'text',
+  step,
   placeholder,
   min,
   max,
@@ -44,6 +46,7 @@ export const FormField = ({
     id,
     value,
     onChange: handleChange,
+    step,
     placeholder,
     disabled,
     'aria-invalid': !!error,

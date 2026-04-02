@@ -1,8 +1,36 @@
 import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
+import { AddPantryItemModal } from './AddPantryItemModal';
+import { PantryItem } from '../../types/pantry';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
+import { addItem } from '../../store/slices/pantrySlice';
 
 export const PantryToolbar = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [isAddPantryItemOpen, setIsAddPantryItemOpen] = useState(false);
+
+  const handleAddItem = (newItemData: {
+    name: string;
+    packageSize: number;
+    packageUnit: string;
+    packagePrice: number;
+  }) => {
+    console.log(newItemData);
+
+    const newItem: PantryItem = {
+      id: crypto.randomUUID(),
+      name: newItemData.name,
+      packageSize: newItemData.packageSize,
+      packageUnit: newItemData.packageUnit,
+      packagePrice: newItemData.packagePrice,
+    };
+
+    dispatch(addItem(newItem));
+  };
+
   return (
     <div className='flex items-center gap-4'>
       <div className='relative w-full max-w-md'>
@@ -22,7 +50,16 @@ export const PantryToolbar = () => {
           className='w-full rounded-md border border-[#c6c8d2] bg-white pl-9 pr-3 py-2 text-sm text-[#1c2b3d] shadow-sm focus:outline-none focus:border-[#315e88] focus-visible:ring-2 focus-visible:ring-[#315e88]'
         />
       </div>
-      <Button text='Add Ingredient' icon={faPlus} />
+      <Button
+        text='Add item'
+        icon={faPlus}
+        onClick={() => setIsAddPantryItemOpen(true)}
+      />
+      <AddPantryItemModal
+        isOpen={isAddPantryItemOpen}
+        onClose={() => setIsAddPantryItemOpen(false)}
+        onAddItem={handleAddItem}
+      />
     </div>
   );
 };

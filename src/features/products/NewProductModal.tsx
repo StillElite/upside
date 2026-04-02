@@ -74,6 +74,7 @@ export const NewProductModal = ({
           label='Price'
           type='number'
           prefix='$'
+          min={0}
           value={sellPrice}
           onChange={(value) => {
             setSellPrice(value);

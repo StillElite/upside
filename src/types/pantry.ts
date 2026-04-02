@@ -1,5 +1,5 @@
-export interface PantryItems {
-  id: number;
+export interface PantryItem {
+  id: string;
   name: string;
   packageSize: number;
   packageUnit: string;

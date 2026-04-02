@@ -1,3 +1,4 @@
+import { PantryItem } from '../types/pantry';
 import { Product } from '../types/products';
 
 // Products
@@ -241,86 +242,86 @@ export const products: Product[] = [
 // Pantry
 // -----------------------
 
-export const pantryItems = [
+export const pantryItems: PantryItem[] = [
   {
-    id: 1,
+    id: '1',
     name: 'All-Purpose Flour',
     packageSize: 5,
     packageUnit: 'lb',
     packagePrice: 4.29,
   },
   {
-    id: 2,
+    id: '2',
     name: 'Granulated Sugar',
     packageSize: 4,
     packageUnit: 'lb',
     packagePrice: 3.99,
   },
   {
-    id: 3,
+    id: '3',
     name: 'Brown Sugar',
     packageSize: 2,
     packageUnit: 'lb',
     packagePrice: 2.49,
   },
   {
-    id: 4,
+    id: '4',
     name: 'Unsalted Butter',
     packageSize: 16,
     packageUnit: 'oz',
     packagePrice: 4.79,
   },
   {
-    id: 5,
+    id: '5',
     name: 'Eggs',
     packageSize: 12,
     packageUnit: 'each',
     packagePrice: 3.49,
   },
   {
-    id: 6,
+    id: '6',
     name: 'Whole Milk',
     packageSize: 64,
     packageUnit: 'oz',
     packagePrice: 3.89,
   },
   {
-    id: 7,
+    id: '7',
     name: 'Vanilla Extract',
     packageSize: 2,
     packageUnit: 'oz',
     packagePrice: 8.99,
   },
   {
-    id: 8,
+    id: '8',
     name: 'Baking Powder',
     packageSize: 8,
     packageUnit: 'oz',
     packagePrice: 2.19,
   },
   {
-    id: 9,
+    id: '9',
     name: 'Baking Soda',
     packageSize: 16,
     packageUnit: 'oz',
     packagePrice: 1.49,
   },
   {
-    id: 10,
+    id: '10',
     name: 'Chocolate Chips',
     packageSize: 12,
     packageUnit: 'oz',
     packagePrice: 3.79,
   },
   {
-    id: 11,
+    id: '11',
     name: 'Cocoa Powder',
     packageSize: 8,
     packageUnit: 'oz',
     packagePrice: 3.29,
   },
   {
-    id: 12,
+    id: '12',
     name: 'Powdered Sugar',
     packageSize: 2,
     packageUnit: 'lb',
