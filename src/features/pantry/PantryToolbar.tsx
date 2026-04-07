@@ -18,8 +18,6 @@ export const PantryToolbar = () => {
     packageUnit: string;
     packagePrice: number;
   }) => {
-    console.log(newItemData);
-
     const newItem: PantryItem = {
       id: crypto.randomUUID(),
       name: newItemData.name,

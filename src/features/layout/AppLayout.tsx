@@ -25,7 +25,7 @@ const AppLayout: React.FC = () => {
       id: crypto.randomUUID(),
       name: newProductData.name,
       sellPrice: newProductData.sellPrice,
-      ingredients: [],
+      recipeIngredients: [],
     };
     dispatch(addProduct(newProduct));
 

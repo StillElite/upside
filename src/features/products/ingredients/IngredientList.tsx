@@ -2,30 +2,56 @@ import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../../components/Button';
 import { formatMoney } from '../../../utils/formatMoney';
 import { IngredientForm } from './IngredientForm';
-import { IngredientItem } from '../../../types/products';
+import { RecipeIngredient } from '../../../types/products';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
-import {
-  deleteIngredient,
-  editIngredient,
-} from '../../../store/slices/productSlice';
+import { deleteIngredient } from '../../../store/slices/productSlice';
 import { ConfirmModal } from '../../../components/ConfirmModal';
 import type { IngredientOption } from './IngredientSection';
 import toast from 'react-hot-toast';
 
 export interface IngredientListProps {
-  ingredients: IngredientItem[];
+  recipeIngredients: RecipeIngredient[];
   ingredientOptions: IngredientOption[];
   isAddingIngredient: boolean;
+  isEditIngredientValid: boolean;
+
+  editingIngredientId: string | null;
+  editIngredientName: string;
+  editQuantity: string;
+  editRecipeUnit: string;
+
+  setEditIngredientName: (value: string) => void;
+  setEditQuantity: (value: string) => void;
+  setEditRecipeUnit: (value: string) => void;
+
   onEditingChange: (isEditing: boolean) => void;
+  onIngredientOptionChange: (option: IngredientOption | null) => void;
+  onStartEdit: (recipeIngredient: RecipeIngredient) => void;
+  onSave: () => void;
+  onCancel: () => void;
 }
 
 export const IngredientList = ({
-  ingredients,
+  recipeIngredients,
   ingredientOptions,
   isAddingIngredient,
-  onEditingChange,
+  isEditIngredientValid,
+  editingIngredientId,
+
+  editIngredientName,
+  editQuantity,
+  editRecipeUnit,
+
+  setEditIngredientName,
+  setEditQuantity,
+  setEditRecipeUnit,
+
+  onIngredientOptionChange,
+  onStartEdit,
+  onSave,
+  onCancel,
 }: IngredientListProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedProductId = useSelector(
@@ -33,57 +59,7 @@ export const IngredientList = ({
   );
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [ingredientToDelete, setIngredientToDelete] =
-    useState<IngredientItem | null>(null);
-
-  const [editingIngredientId, setEditingIngredientId] = useState<string | null>(
-    null,
-  );
-  const [editIngredientName, setEditIngredientName] = useState('');
-  const [editQuantity, setEditQuantity] = useState('');
-  const [editUnit, setEditUnit] = useState('');
-
-  const isEditIngredientValid =
-    editIngredientName.trim() !== '' &&
-    editQuantity.trim() !== '' &&
-    editUnit.trim() !== '';
-
-  const handleStartEdit = (ingredient: IngredientItem) => {
-    setEditingIngredientId(ingredient.id);
-    setEditIngredientName(ingredient.name);
-    setEditQuantity(ingredient.quantity.toString());
-    setEditUnit(ingredient.unit);
-    onEditingChange(true);
-  };
-
-  const handleCancelIngredientForm = () => {
-    setEditingIngredientId(null);
-    setEditIngredientName('');
-    setEditQuantity('');
-    setEditUnit('');
-    onEditingChange(false);
-  };
-
-  const handleSaveEdit = () => {
-    if (!selectedProductId || !editingIngredientId || !isEditIngredientValid)
-      return;
-
-    dispatch(
-      editIngredient({
-        productId: selectedProductId,
-        updatedIngredient: {
-          id: editingIngredientId,
-          name: editIngredientName.trim(),
-          quantity: Number(editQuantity),
-          unit: editUnit.trim(),
-          cost: 0,
-        },
-      }),
-    );
-
-    toast.success(`Ingredient updated successfully`);
-
-    handleCancelIngredientForm();
-  };
+    useState<RecipeIngredient | null>(null);
 
   const handleDeleteIngredient = () => {
     if (!selectedProductId || !ingredientToDelete) return;
@@ -110,9 +86,9 @@ export const IngredientList = ({
   return (
     <>
       <ul className='text-[#1c2b3d]'>
-        {ingredients.map((ingredient, index) => {
-          const { id, name, quantity, unit, cost } = ingredient;
-          const quantityDisplay = `${quantity} ${unit}`;
+        {recipeIngredients.map((recipeIngredient, index) => {
+          const { id, name, quantity, recipeUnit, cost } = recipeIngredient;
+          const quantityDisplay = `${quantity} ${recipeUnit}`;
           const numberDisplay = index + 1;
           const isEditing = editingIngredientId === id;
 
@@ -123,13 +99,14 @@ export const IngredientList = ({
                   <IngredientForm
                     ingredientName={editIngredientName}
                     quantity={editQuantity}
-                    unit={editUnit}
+                    recipeUnit={editRecipeUnit}
                     options={ingredientOptions}
                     onIngredientNameChange={setEditIngredientName}
+                    onIngredientOptionChange={onIngredientOptionChange}
                     onQuantityChange={setEditQuantity}
-                    onUnitChange={setEditUnit}
-                    onSave={handleSaveEdit}
-                    onCancel={handleCancelIngredientForm}
+                    onUnitChange={setEditRecipeUnit}
+                    onSave={onSave}
+                    onCancel={onCancel}
                     isValid={isEditIngredientValid}
                   />
                 ) : (
@@ -152,7 +129,7 @@ export const IngredientList = ({
                           variant='icon-only'
                           className='text-gray-400 hover:text-[#305e88]'
                           aria-label={`Edit ${name}`}
-                          onClick={() => handleStartEdit(ingredient)}
+                          onClick={() => onStartEdit(recipeIngredient)}
                           disabled={isAddingIngredient}
                         />
                         {isAddingIngredient && (
@@ -169,7 +146,7 @@ export const IngredientList = ({
                         className='text-gray-400 hover:text-[#ba3d3d]'
                         aria-label={`Delete ${name}`}
                         onClick={() => {
-                          setIngredientToDelete(ingredient);
+                          setIngredientToDelete(recipeIngredient);
                           setIsConfirmOpen(true);
                         }}
                       />

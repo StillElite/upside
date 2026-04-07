@@ -2,13 +2,15 @@ import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../../components/Button';
 import CreatableSelect from 'react-select/creatable';
 import type { SingleValue } from 'react-select';
+import { IngredientOption } from './IngredientSection';
 
 export interface IngredientFormProps {
   ingredientName: string;
   quantity: string;
-  unit: string;
+  recipeUnit: string;
   options: IngredientOption[];
   onIngredientNameChange: (value: string) => void;
+  onIngredientOptionChange: (option: IngredientOption | null) => void;
   onQuantityChange: (value: string) => void;
   onUnitChange: (value: string) => void;
   onSave: () => void;
@@ -16,17 +18,13 @@ export interface IngredientFormProps {
   isValid: boolean;
 }
 
-type IngredientOption = {
-  value: string;
-  label: string;
-};
-
 export const IngredientForm = ({
   ingredientName,
   quantity,
-  unit,
+  recipeUnit,
   options,
   onIngredientNameChange,
+  onIngredientOptionChange,
   onQuantityChange,
   onUnitChange,
   onSave,
@@ -45,6 +43,12 @@ export const IngredientForm = ({
     : null;
 
   const handleCreate = (inputValue: string) => {
+    const newOption: IngredientOption = {
+      value: inputValue,
+      label: inputValue,
+      isNew: true,
+    };
+    onIngredientOptionChange(newOption);
     onIngredientNameChange(inputValue);
   };
 
@@ -60,9 +64,10 @@ export const IngredientForm = ({
       <div className='flex flex-1 items-center gap-3'>
         <CreatableSelect
           isClearable
-          onChange={(newValue: SingleValue<IngredientOption>) =>
-            onIngredientNameChange(newValue?.label ?? '')
-          }
+          onChange={(newValue: SingleValue<IngredientOption>) => {
+            onIngredientOptionChange(newValue ?? null);
+            onIngredientNameChange(newValue?.label ?? '');
+          }}
           styles={{
             control: (base, state) => ({
               ...base,
@@ -94,7 +99,7 @@ export const IngredientForm = ({
           id='ingredient-unit'
           type='text'
           placeholder='Unit'
-          value={unit}
+          value={recipeUnit}
           onChange={(e) => onUnitChange(e.target.value)}
           className='h-[38px] w-28 rounded-[4px] border border-[#c6c8d2] px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#305e88] focus:border-[#305e88]'
         />

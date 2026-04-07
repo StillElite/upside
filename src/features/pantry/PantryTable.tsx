@@ -3,10 +3,10 @@ import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../components/Button';
 
 interface PantryTableProps {
-  ingredients: PantryItem[];
+  pantryItems: PantryItem[];
 }
 
-export const PantryTable = ({ ingredients }: PantryTableProps) => {
+export const PantryTable = ({ pantryItems }: PantryTableProps) => {
   return (
     <>
       <div className='mt-6 flex-1 overflow-y-auto custom-scrollbar rounded-lg bg-white border border-[#c6c8d2]'>
@@ -30,27 +30,24 @@ export const PantryTable = ({ ingredients }: PantryTableProps) => {
           </thead>
 
           <tbody className='bg-white rounded-lg'>
-            {ingredients.map((ingredient) => (
+            {pantryItems.map((item) => (
               <tr
-                key={ingredient.id}
+                key={item.id}
                 className='border-t border-[#c6c8d2] hover:bg-[#E0E7EC]'
               >
-                <td className='px-4 py-3'>{ingredient.name}</td>
+                <td className='px-4 py-3'>{item.name}</td>
 
                 <td className='px-4 py-3 text-right'>
-                  {ingredient.packageSize} {ingredient.packageUnit}
+                  {item.packageSize} {item.packageUnit}
                 </td>
 
                 <td className='px-4 py-3 text-right'>
-                  ${ingredient.packagePrice.toFixed(2)}
+                  ${item.packagePrice.toFixed(2)}
                 </td>
 
                 <td className='px-4 py-3 text-right'>
-                  $
-                  {(ingredient.packagePrice / ingredient.packageSize).toFixed(
-                    2,
-                  )}
-                  / {ingredient.packageUnit}
+                  ${(item.packagePrice / item.packageSize).toFixed(2)}/{' '}
+                  {item.packageUnit}
                 </td>
 
                 <td className='px-4 py-3 text-right'>
@@ -59,14 +56,14 @@ export const PantryTable = ({ ingredients }: PantryTableProps) => {
                       icon={faPencil}
                       variant='icon-only'
                       className='text-slate-400 hover:text-[#305e88]'
-                      aria-label={`Edit ${ingredient.name}`}
+                      aria-label={`Edit ${item.name}`}
                     />
                     <span className='px-2'>|</span>
                     <Button
                       icon={faTrash}
                       variant='icon-only'
                       className='text-slate-400 hover:text-[#ba3d3d]'
-                      aria-label={`Delete ${ingredient.name}`}
+                      aria-label={`Delete ${item.name}`}
                     />
                   </div>
                 </td>

@@ -7,7 +7,7 @@ export interface CostSummaryProps {
 
 export const CostSummary = ({ selectedProduct }: CostSummaryProps) => {
   // Calculate total from your dummy data
-  const currentCost = selectedProduct.ingredients.reduce(
+  const currentCost = selectedProduct.recipeIngredients.reduce(
     (acc, ing) => acc + ing.cost,
     0,
   );

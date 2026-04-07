@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { products } from '../../data/mockData';
-import { IngredientItem, Product } from '../../types/products';
+import { RecipeIngredient, Product } from '../../types/products';
 
 interface ProductState {
   products: Product[];
@@ -8,12 +8,12 @@ interface ProductState {
 }
 interface AddIngredientPayload {
   productId: string;
-  newIngredient: IngredientItem;
+  newIngredient: RecipeIngredient;
 }
 
 interface UpdateIngredientPayload {
   productId: string;
-  updatedIngredient: IngredientItem;
+  updatedIngredient: RecipeIngredient;
 }
 
 interface DeleteProductPayload {
@@ -51,13 +51,13 @@ const productSlice = createSlice({
       const product = state.products.find((item) => item.id === productId);
       if (!product) return;
 
-      product.ingredients.push(newIngredient);
+      product.recipeIngredients.push(newIngredient);
     },
     editIngredient: (state, action: PayloadAction<UpdateIngredientPayload>) => {
       const { productId, updatedIngredient } = action.payload;
       const product = state.products.find((item) => item.id === productId);
       if (!product) return;
-      const ingredient = product.ingredients.find(
+      const ingredient = product.recipeIngredients.find(
         (ingredient) => ingredient.id === updatedIngredient.id,
       );
 
@@ -65,7 +65,7 @@ const productSlice = createSlice({
 
       ingredient.name = updatedIngredient.name;
       ingredient.quantity = updatedIngredient.quantity;
-      ingredient.unit = updatedIngredient.unit;
+      ingredient.recipeUnit = updatedIngredient.recipeUnit;
       ingredient.cost = updatedIngredient.cost;
     },
     deleteIngredient: (
@@ -78,7 +78,7 @@ const productSlice = createSlice({
 
       if (!product) return;
 
-      product.ingredients = product.ingredients.filter(
+      product.recipeIngredients = product.recipeIngredients.filter(
         (ingredient) => ingredient.id !== ingredientId,
       );
     },

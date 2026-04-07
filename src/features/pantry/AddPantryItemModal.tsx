@@ -69,11 +69,12 @@ export const AddPantryItemModal = ({
     setErrors({});
     onClose();
   };
+
   return (
     <FormModal
       isOpen={isOpen}
       onClose={handleClose}
-      title='Add Item'
+      title='Add Pantry Item'
       cancelLabel='Cancel'
       submitLabel='Save Item'
       onSubmit={handleSubmit}
@@ -93,9 +94,10 @@ export const AddPantryItemModal = ({
         <div className='flex justify-between'>
           <FormField
             id='item-package-size'
-            label='Size'
+            label='Package Size'
             type='number'
             value={packageSize}
+            min={1}
             onChange={(value) => {
               setPackageSize(value);
               setErrors((prev) => ({ ...prev, packageSize: '' }));
@@ -104,7 +106,7 @@ export const AddPantryItemModal = ({
           />
           <FormField
             id='item-package-unit'
-            label='Unit'
+            label='Package Unit'
             value={packageUnit}
             onChange={(value) => {
               setPackageUnit(value);

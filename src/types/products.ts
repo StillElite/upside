@@ -1,8 +1,9 @@
-export interface IngredientItem {
+export interface RecipeIngredient {
   id: string;
+  pantryItemId?: string;
   name: string;
   quantity: number;
-  unit: string;
+  recipeUnit: string;
   cost: number;
 }
 
@@ -10,5 +11,5 @@ export interface Product {
   id: string;
   name: string;
   sellPrice: number;
-  ingredients: IngredientItem[];
+  recipeIngredients: RecipeIngredient[];
 }
