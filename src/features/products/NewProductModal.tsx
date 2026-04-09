@@ -24,10 +24,6 @@ export const NewProductModal = ({
       newErrors.name = 'Please enter a name.';
     }
 
-    if (!sellPrice.trim()) {
-      newErrors.sellPrice = 'Please enter a price.';
-    }
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -71,7 +67,7 @@ export const NewProductModal = ({
 
         <FormField
           id='product-price'
-          label='Price'
+          label='Price (optional)'
           type='number'
           prefix='$'
           min={0}

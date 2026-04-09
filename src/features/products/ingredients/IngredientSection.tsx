@@ -64,6 +64,11 @@ export const IngredientSection = ({
     (state: RootState) => state.pantry.pantryItems,
   );
 
+  const originalIngredient =
+    recipeIngredients.find(
+      (recipeIngredient) => recipeIngredient.id === editingIngredientId,
+    ) ?? null;
+
   const ingredientOptions: IngredientOption[] = pantryItems.map((item) => ({
     value: item.name,
     label: item.name,
@@ -74,6 +79,22 @@ export const IngredientSection = ({
     newIngredientName.trim() !== '' &&
     newQuantity.trim() !== '' &&
     newRecipeUnit.trim() !== '';
+
+  const fieldsToWatch: (keyof RecipeIngredient)[] = [
+    'pantryItemId',
+    'name',
+    'quantity',
+    'recipeUnit',
+  ];
+
+  const hasFormChanged = (
+    original: RecipeIngredient | null,
+    edited: RecipeIngredient | null,
+    fieldsToWatch: (keyof RecipeIngredient)[],
+  ) => {
+    if (!original || !edited) return original !== edited;
+    return fieldsToWatch.some((key) => original[key] !== edited[key]);
+  };
 
   const handleAddIngredient = (ingredient: RecipeIngredient) => {
     if (!selectedProductId) return;
@@ -247,7 +268,11 @@ export const IngredientSection = ({
         },
       }),
     );
-    toast.success(`${editIngredientName} updated successfully`);
+
+    if (hasFormChanged(originalIngredient, editingIngredient, fieldsToWatch)) {
+      toast.success(`${editIngredientName} updated successfully`);
+    }
+
     handleCancelIngredientForm();
   };
 
@@ -320,6 +345,7 @@ export const IngredientSection = ({
         isOpen={isAddPantryItemOpen}
         onClose={() => setIsAddPantryItemOpen(false)}
         onAddItem={handleAddItem}
+        initialName={pendingIngredient?.name ?? ''}
       />
 
       <div

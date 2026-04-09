@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormField } from '../../components/FormField';
 import { FormModal } from '../../components/FormModal';
 
@@ -11,18 +11,26 @@ export interface AddPantryItemModalProps {
     packageUnit: string;
     packagePrice: number;
   }) => void;
+  initialName?: string;
 }
 
 export const AddPantryItemModal = ({
   isOpen,
   onClose,
   onAddItem,
+  initialName,
 }: AddPantryItemModalProps) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState(initialName ?? '');
   const [packageSize, setPackageSize] = useState('');
   const [packageUnit, setPackageUnit] = useState('');
   const [packagePrice, setPackagePrice] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    if (isOpen) {
+      setName(initialName ?? '');
+    }
+  }, [isOpen, initialName]);
 
   const handleSubmit = () => {
     const newErrors: { [key: string]: string } = {};
