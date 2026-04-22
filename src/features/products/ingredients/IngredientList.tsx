@@ -10,25 +10,25 @@ import { deleteIngredient } from '../../../store/slices/productSlice';
 import { ConfirmModal } from '../../../components/ConfirmModal';
 import type { IngredientOption } from './IngredientSection';
 import toast from 'react-hot-toast';
+import { calculateIngredientCost } from '../../../utils/calculateIngredientCost';
+import { PantryItem } from '../../../types/pantry';
 
 export interface IngredientListProps {
   recipeIngredients: RecipeIngredient[];
   ingredientOptions: IngredientOption[];
+  pantryItems: PantryItem[];
   isAddingIngredient: boolean;
   isEditIngredientValid: boolean;
-
   editingIngredientId: string | null;
   editIngredientName: string;
   editQuantity: string;
   editRecipeUnit: string;
-
-  setEditIngredientName: (value: string) => void;
-  setEditQuantity: (value: string) => void;
-  setEditRecipeUnit: (value: string) => void;
-
+  onEditNameChange: (value: string) => void;
+  onEditQuantityChange: (value: string) => void;
+  onEditRecipeUnitChange: (value: string) => void;
   onEditingChange: (isEditing: boolean) => void;
-  onIngredientOptionChange: (option: IngredientOption | null) => void;
   onStartEdit: (recipeIngredient: RecipeIngredient) => void;
+  onIngredientOptionChange: (option: IngredientOption | null) => void;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -36,20 +36,18 @@ export interface IngredientListProps {
 export const IngredientList = ({
   recipeIngredients,
   ingredientOptions,
+  pantryItems,
   isAddingIngredient,
   isEditIngredientValid,
   editingIngredientId,
-
   editIngredientName,
   editQuantity,
   editRecipeUnit,
-
-  setEditIngredientName,
-  setEditQuantity,
-  setEditRecipeUnit,
-
-  onIngredientOptionChange,
+  onEditNameChange,
+  onEditQuantityChange,
+  onEditRecipeUnitChange,
   onStartEdit,
+  onIngredientOptionChange,
   onSave,
   onCancel,
 }: IngredientListProps) => {
@@ -92,6 +90,21 @@ export const IngredientList = ({
           const numberDisplay = index + 1;
           const isEditing = editingIngredientId === id;
 
+          const getIngredientCost = (recipeIngredient: RecipeIngredient) => {
+            const pantryItem = pantryItems.find(
+              (item) => item.id === recipeIngredient.pantryItemId,
+            );
+
+            return calculateIngredientCost(
+              pantryItem?.packageSize ?? 0,
+              pantryItem?.packageUnit ?? '',
+              pantryItem?.packagePrice ?? 0,
+              pantryItem?.gramsPerCup,
+              recipeIngredient.quantity,
+              recipeIngredient.recipeUnit,
+            );
+          };
+
           return (
             <li key={id}>
               <div className='group flex items-center justify-between border-b border-[#c6c8d2] px-2 py-4 transition-colors hover:bg-[#E0E7EC]'>
@@ -101,10 +114,10 @@ export const IngredientList = ({
                     quantity={editQuantity}
                     recipeUnit={editRecipeUnit}
                     options={ingredientOptions}
-                    onIngredientNameChange={setEditIngredientName}
+                    onIngredientNameChange={onEditNameChange}
                     onIngredientOptionChange={onIngredientOptionChange}
-                    onQuantityChange={setEditQuantity}
-                    onUnitChange={setEditRecipeUnit}
+                    onQuantityChange={onEditQuantityChange}
+                    onUnitChange={onEditRecipeUnitChange}
                     onSave={onSave}
                     onCancel={onCancel}
                     isValid={isEditIngredientValid}
@@ -119,7 +132,10 @@ export const IngredientList = ({
                       <span>-</span>
                       <span>{quantityDisplay}</span>
                       <span>-</span>
-                      <strong>{formatMoney(cost)}</strong>
+                      <strong>
+                        {formatMoney(getIngredientCost(recipeIngredient))}
+                      </strong>
+                      {/* <strong>{getIngredientCost(recipeIngredient)}</strong> */}
                     </div>
 
                     <div className='flex items-center gap-3 group-focus-within:opacity-100 transition-opacity'>

@@ -4,4 +4,5 @@ export interface PantryItem {
   packageSize: number;
   packageUnit: string;
   packagePrice: number;
+  gramsPerCup?: number;
 }

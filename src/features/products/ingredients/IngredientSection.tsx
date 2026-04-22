@@ -33,17 +33,22 @@ export const IngredientSection = ({
   const listRef = useRef<HTMLDivElement | null>(null);
   const [isAddingIngredient, setIsAddingIngredient] = useState(false);
   const [isEditingFlow, setIsEditingFlow] = useState(false);
-  const [editingIngredientId, setEditingIngredientId] = useState<string | null>(
-    null,
-  );
-  const [editIngredientName, setEditIngredientName] = useState('');
-  const [editQuantity, setEditQuantity] = useState('');
-  const [editRecipeUnit, setEditRecipeUnit] = useState('');
+  const [addIngredientForm, setAddIngredientForm] = useState({
+    name: '',
+    quantity: '',
+    recipeUnit: '',
+  });
+  const [editForm, setEditForm] = useState({
+    id: '',
+    name: '',
+    quantity: '',
+    recipeUnit: '',
+  });
 
   const isEditIngredientValid =
-    editIngredientName.trim() !== '' &&
-    editQuantity.trim() !== '' &&
-    editRecipeUnit.trim() !== '';
+    editForm.name.trim() !== '' &&
+    editForm.quantity.trim() !== '' &&
+    editForm.recipeUnit.trim() !== '';
 
   const selectedProductId = useSelector(
     (state: RootState) => state.products.selectedProductId,
@@ -52,9 +57,6 @@ export const IngredientSection = ({
   const [selectedIngredientOption, setSelectedIngredientOption] =
     useState<IngredientOption | null>(null);
 
-  const [newIngredientName, setNewIngredientName] = useState('');
-  const [newQuantity, setNewQuantity] = useState('');
-  const [newRecipeUnit, setNewRecipeUnit] = useState('');
   const [pendingIngredient, setPendingIngredient] =
     useState<RecipeIngredient | null>(null);
   const [isPendingEdit, setIsPendingEdit] = useState(false);
@@ -66,7 +68,7 @@ export const IngredientSection = ({
 
   const originalIngredient =
     recipeIngredients.find(
-      (recipeIngredient) => recipeIngredient.id === editingIngredientId,
+      (recipeIngredient) => recipeIngredient.id === editForm.id,
     ) ?? null;
 
   const ingredientOptions: IngredientOption[] = pantryItems.map((item) => ({
@@ -76,9 +78,9 @@ export const IngredientSection = ({
   }));
 
   const isNewIngredientValid =
-    newIngredientName.trim() !== '' &&
-    newQuantity.trim() !== '' &&
-    newRecipeUnit.trim() !== '';
+    addIngredientForm.name.trim() !== '' &&
+    addIngredientForm.quantity.trim() !== '' &&
+    addIngredientForm.quantity.trim() !== '';
 
   const fieldsToWatch: (keyof RecipeIngredient)[] = [
     'pantryItemId',
@@ -167,10 +169,23 @@ export const IngredientSection = ({
     setIsAddPantryItemOpen(false);
     setIsEditingFlow(false);
 
-    setNewIngredientName('');
-    setNewQuantity('');
-    setNewRecipeUnit('');
+    setAddIngredientForm({
+      name: '',
+      quantity: '',
+      recipeUnit: '',
+    });
+
     setIsAddingIngredient(false);
+  };
+
+  const handleAddFormChange = (
+    field: keyof typeof addIngredientForm,
+    value: string,
+  ) => {
+    setAddIngredientForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   const handleSaveNewIngredient = () => {
@@ -178,9 +193,9 @@ export const IngredientSection = ({
 
     const newIngredient: RecipeIngredient = {
       id: crypto.randomUUID(),
-      name: newIngredientName.trim(),
-      quantity: Number(newQuantity),
-      recipeUnit: newRecipeUnit.trim(),
+      name: addIngredientForm.name.trim(),
+      quantity: Number(addIngredientForm.quantity),
+      recipeUnit: addIngredientForm.recipeUnit.trim(),
       cost: 0,
     };
 
@@ -201,25 +216,31 @@ export const IngredientSection = ({
       toast.success(`${updatedIngredient.name} added successfully`);
     }
 
-    setNewIngredientName('');
-    setNewQuantity('');
-    setNewRecipeUnit('');
+    setAddIngredientForm({
+      name: '',
+      quantity: '',
+      recipeUnit: '',
+    });
     setIsAddingIngredient(false);
   };
 
   const handleCancelIngredientForm = () => {
-    setEditingIngredientId(null);
-    setEditIngredientName('');
-    setEditQuantity('');
-    setEditRecipeUnit('');
+    setEditForm({
+      id: '',
+      name: '',
+      quantity: '',
+      recipeUnit: '',
+    });
     setIsEditingFlow(false);
   };
 
   const handleStartEdit = (recipeIngredient: RecipeIngredient) => {
-    setEditingIngredientId(recipeIngredient.id);
-    setEditIngredientName(recipeIngredient.name);
-    setEditQuantity(recipeIngredient.quantity.toString());
-    setEditRecipeUnit(recipeIngredient.recipeUnit);
+    setEditForm({
+      id: recipeIngredient.id,
+      name: recipeIngredient.name,
+      quantity: recipeIngredient.quantity.toString(),
+      recipeUnit: recipeIngredient.recipeUnit,
+    });
     setIsEditingFlow(true);
 
     const newIngredientOption = {
@@ -230,10 +251,20 @@ export const IngredientSection = ({
     setSelectedIngredientOption(newIngredientOption);
   };
 
+  const handleEditFormChange = (
+    field: keyof typeof editForm,
+    value: string,
+  ) => {
+    setEditForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const handleSaveEdit = () => {
     if (
       !selectedProductId ||
-      !editingIngredientId ||
+      !editForm.id ||
       !isEditIngredientValid ||
       !selectedIngredientOption
     ) {
@@ -241,11 +272,11 @@ export const IngredientSection = ({
     }
 
     const editingIngredient = {
-      id: editingIngredientId,
+      id: editForm.id,
       pantryItemId: selectedIngredientOption.pantryItemId ?? '',
-      name: editIngredientName.trim(),
-      quantity: Number(editQuantity),
-      recipeUnit: editRecipeUnit.trim(),
+      name: editForm.name.trim(),
+      quantity: Number(editForm.quantity),
+      recipeUnit: editForm.recipeUnit.trim(),
       cost: 0,
     };
 
@@ -260,17 +291,17 @@ export const IngredientSection = ({
       editIngredient({
         productId: selectedProductId,
         updatedIngredient: {
-          id: editingIngredientId,
-          name: editIngredientName.trim(),
-          quantity: Number(editQuantity),
-          recipeUnit: editRecipeUnit.trim(),
+          id: editForm.id,
+          name: editForm.name.trim(),
+          quantity: Number(editForm.quantity),
+          recipeUnit: editForm.recipeUnit.trim(),
           cost: 0,
         },
       }),
     );
 
     if (hasFormChanged(originalIngredient, editingIngredient, fieldsToWatch)) {
-      toast.success(`${editIngredientName} updated successfully`);
+      toast.success(`${editForm.name} updated successfully`);
     }
 
     handleCancelIngredientForm();
@@ -278,9 +309,11 @@ export const IngredientSection = ({
 
   const handleToggleAddIngredient = () => {
     setIsAddingIngredient((prev) => !prev);
-    setNewIngredientName('');
-    setNewQuantity('');
-    setNewRecipeUnit('');
+    setAddIngredientForm({
+      name: '',
+      quantity: '',
+      recipeUnit: '',
+    });
   };
 
   useEffect(() => {
@@ -327,14 +360,16 @@ export const IngredientSection = ({
       {isAddingIngredient && (
         <div className='border-b border-[#c6c8d2] px-2 py-4 transition-colors hover:bg-[#E0E7EC]'>
           <IngredientForm
-            ingredientName={newIngredientName}
-            quantity={newQuantity}
-            recipeUnit={newRecipeUnit}
+            ingredientName={addIngredientForm.name}
+            quantity={addIngredientForm.quantity}
+            recipeUnit={addIngredientForm.recipeUnit}
             options={ingredientOptions}
-            onIngredientNameChange={setNewIngredientName}
+            onIngredientNameChange={(value) =>
+              handleAddFormChange('name', value)
+            }
+            onQuantityChange={(value) => handleAddFormChange('quantity', value)}
+            onUnitChange={(value) => handleAddFormChange('recipeUnit', value)}
             onIngredientOptionChange={setSelectedIngredientOption}
-            onQuantityChange={setNewQuantity}
-            onUnitChange={setNewRecipeUnit}
             onSave={handleSaveNewIngredient}
             onCancel={handleToggleAddIngredient}
             isValid={isNewIngredientValid}
@@ -355,17 +390,22 @@ export const IngredientSection = ({
         <IngredientList
           recipeIngredients={recipeIngredients}
           ingredientOptions={ingredientOptions}
+          pantryItems={pantryItems}
           isAddingIngredient={isAddingIngredient}
           isEditIngredientValid={isEditIngredientValid}
           onEditingChange={setIsEditingFlow}
           onIngredientOptionChange={setSelectedIngredientOption}
-          editingIngredientId={editingIngredientId}
-          setEditIngredientName={setEditIngredientName}
-          setEditQuantity={setEditQuantity}
-          setEditRecipeUnit={setEditRecipeUnit}
-          editIngredientName={editIngredientName}
-          editQuantity={editQuantity}
-          editRecipeUnit={editRecipeUnit}
+          editingIngredientId={editForm.id}
+          onEditNameChange={(value) => handleEditFormChange('name', value)}
+          onEditQuantityChange={(value) =>
+            handleEditFormChange('quantity', value)
+          }
+          onEditRecipeUnitChange={(value) =>
+            handleEditFormChange('recipeUnit', value)
+          }
+          editIngredientName={editForm.name}
+          editQuantity={editForm.quantity}
+          editRecipeUnit={editForm.recipeUnit}
           onStartEdit={handleStartEdit}
           onSave={isEditingFlow ? handleSaveEdit : handleSaveNewIngredient}
           onCancel={handleCancelIngredientForm}

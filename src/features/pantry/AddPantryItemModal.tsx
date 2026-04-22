@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { FormField } from '../../components/FormField';
 import { FormModal } from '../../components/FormModal';
+import Select from 'react-select';
+import { PACKAGE_UNIT_OPTIONS } from '../../constants/unit';
 
 export interface AddPantryItemModalProps {
   isOpen: boolean;
@@ -99,7 +101,7 @@ export const AddPantryItemModal = ({
           error={errors.name}
         />
 
-        <div className='flex justify-between'>
+        <div className='flex gap-4'>
           <FormField
             id='item-package-size'
             label='Package Size'
@@ -112,16 +114,43 @@ export const AddPantryItemModal = ({
             }}
             error={errors.packageSize}
           />
-          <FormField
-            id='item-package-unit'
-            label='Package Unit'
-            value={packageUnit}
-            onChange={(value) => {
-              setPackageUnit(value);
-              setErrors((prev) => ({ ...prev, packageUnit: '' }));
-            }}
-            error={errors.packageUnit}
-          />
+          <div className='flex-1 space-y-1'>
+            <label
+              htmlFor='item-package-unit'
+              className='block text-sm font-medium text-[#38506a]'
+            >
+              Package Unit
+            </label>
+            <Select
+              inputId='item-package-unit'
+              options={PACKAGE_UNIT_OPTIONS}
+              value={
+                PACKAGE_UNIT_OPTIONS.find((opt) => opt.value === packageUnit) ||
+                null
+              }
+              onChange={(option) => {
+                setPackageUnit(option?.value ?? '');
+                setErrors((prev) => ({ ...prev, packageUnit: '' }));
+              }}
+              isClearable
+              placeholder='Select unit'
+              styles={{
+                control: (base, state) => ({
+                  ...base,
+                  width: '100%',
+                  borderColor: state.isFocused ? '#305e88' : base.borderColor,
+                  boxShadow: state.isFocused
+                    ? '0 0 0 2px #305e88'
+                    : base.boxShadow,
+                  '&:hover': {
+                    borderColor: state.isFocused ? '#305e88' : base.borderColor,
+                  },
+                }),
+              }}
+              className='w-full rounded-md text-sm'
+              // className='min-w-[140px] rounded-md px-2 py-1 text-sm'
+            />
+          </div>
         </div>
 
         <FormField

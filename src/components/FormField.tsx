@@ -36,8 +36,8 @@ export const FormField = ({
   };
 
   const inputClasses = clsx(
-    'w-full rounded-md border border-[#8ea3b5] bg-white px-3 text-sm text-[#1c2b3d] transition outline-none h-[38px]',
-    'focus:border-[#305e88] focus:ring-1 focus:ring-[#305e88]',
+    'w-full rounded-[4px] border border-[#c6c8d2] bg-white px-3 text-sm text-[#1c2b3d] transition outline-none h-[38px]',
+    'focus:border-[#305e88] focus:ring-2 focus:ring-[#305e88]',
     'disabled:cursor-not-allowed disabled:bg-[#eef3f7] disabled:text-[#6b7a8c]',
     error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
   );
