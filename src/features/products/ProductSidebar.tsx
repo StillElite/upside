@@ -17,6 +17,8 @@ export const ProductSidebar = () => {
     (state: RootState) => state.products,
   );
 
+  const { pantryItems } = useSelector((state: RootState) => state.pantry);
+
   const selectedProduct =
     products.find((p) => p.id === selectedProductId) ?? null;
 
@@ -46,7 +48,10 @@ export const ProductSidebar = () => {
   return (
     <div className='flex flex-col gap-2'>
       <PanelCard title='Cost & Profit'>
-        <CostSummary selectedProduct={selectedProduct} />
+        <CostSummary
+          selectedProduct={selectedProduct}
+          pantryItems={pantryItems}
+        />
       </PanelCard>
 
       <PanelCard title='Quick Action'>

@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import { AddPantryItemModal } from '../../pantry/AddPantryItemModal';
 import { PantryItem } from '../../../types/pantry';
 import { addItem } from '../../../store/slices/pantrySlice';
+import { parseQuantity } from '../../../utils/parseQuantity';
 
 export interface IngredientSectionProps {
   recipeIngredients: RecipeIngredient[];
@@ -191,12 +192,16 @@ export const IngredientSection = ({
   const handleSaveNewIngredient = () => {
     if (!isNewIngredientValid) return;
 
+    const parsedQuantity = parseQuantity(addIngredientForm.quantity);
+    if (parsedQuantity === null || parsedQuantity <= 0) {
+      return;
+    }
+
     const newIngredient: RecipeIngredient = {
       id: crypto.randomUUID(),
       name: addIngredientForm.name.trim(),
-      quantity: Number(addIngredientForm.quantity),
+      quantity: parsedQuantity,
       recipeUnit: addIngredientForm.recipeUnit.trim(),
-      cost: 0,
     };
 
     if (selectedIngredientOption?.isNew) {
@@ -271,13 +276,17 @@ export const IngredientSection = ({
       return;
     }
 
+    const parseEditQuantity = parseQuantity(editForm.quantity);
+    if (parseEditQuantity === null || parseEditQuantity <= 0) {
+      return;
+    }
+
     const editingIngredient = {
       id: editForm.id,
       pantryItemId: selectedIngredientOption.pantryItemId ?? '',
       name: editForm.name.trim(),
-      quantity: Number(editForm.quantity),
+      quantity: parseEditQuantity,
       recipeUnit: editForm.recipeUnit.trim(),
-      cost: 0,
     };
 
     if (selectedIngredientOption?.isNew) {
@@ -293,9 +302,8 @@ export const IngredientSection = ({
         updatedIngredient: {
           id: editForm.id,
           name: editForm.name.trim(),
-          quantity: Number(editForm.quantity),
+          quantity: parseEditQuantity,
           recipeUnit: editForm.recipeUnit.trim(),
-          cost: 0,
         },
       }),
     );

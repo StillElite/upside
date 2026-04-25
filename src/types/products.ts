@@ -4,7 +4,6 @@ export interface RecipeIngredient {
   name: string;
   quantity: number;
   recipeUnit: string;
-  cost: number;
 }
 
 export interface Product {

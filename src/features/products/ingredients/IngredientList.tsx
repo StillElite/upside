@@ -12,6 +12,8 @@ import type { IngredientOption } from './IngredientSection';
 import toast from 'react-hot-toast';
 import { calculateIngredientCost } from '../../../utils/calculateIngredientCost';
 import { PantryItem } from '../../../types/pantry';
+import { formatUnit } from '../../../utils/formatUnit';
+import { formatQuantity } from '../../../utils/formatQuantity';
 
 export interface IngredientListProps {
   recipeIngredients: RecipeIngredient[];
@@ -85,8 +87,7 @@ export const IngredientList = ({
     <>
       <ul className='text-[#1c2b3d]'>
         {recipeIngredients.map((recipeIngredient, index) => {
-          const { id, name, quantity, recipeUnit, cost } = recipeIngredient;
-          const quantityDisplay = `${quantity} ${recipeUnit}`;
+          const { id, name, quantity, recipeUnit } = recipeIngredient;
           const numberDisplay = index + 1;
           const isEditing = editingIngredientId === id;
 
@@ -130,12 +131,14 @@ export const IngredientList = ({
                       </span>
                       <strong>{name}</strong>
                       <span>-</span>
-                      <span>{quantityDisplay}</span>
+                      <span>
+                        {formatQuantity(quantity)}{' '}
+                        {formatUnit(recipeUnit, quantity)}
+                      </span>
                       <span>-</span>
                       <strong>
                         {formatMoney(getIngredientCost(recipeIngredient))}
                       </strong>
-                      {/* <strong>{getIngredientCost(recipeIngredient)}</strong> */}
                     </div>
 
                     <div className='flex items-center gap-3 group-focus-within:opacity-100 transition-opacity'>

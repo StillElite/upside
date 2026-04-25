@@ -1,4 +1,93 @@
-import { GRAMS_PER_LB, GRAMS_PER_OZ } from '../constants/conversions';
+import {
+  GRAMS_PER_LB,
+  GRAMS_PER_OZ,
+  OUNCES_PER_CUP,
+  TBSP_PER_CUP,
+  TSP_PER_CUP,
+} from '../constants/conversions';
+
+const getTotalPackageGrams = (
+  packageSize: number,
+  packageUnit: string,
+): number => {
+  if (packageUnit === 'lb') {
+    return packageSize * GRAMS_PER_LB;
+  }
+
+  if (packageUnit === 'oz') {
+    return packageSize * GRAMS_PER_OZ;
+  }
+
+  if (packageUnit === 'g') {
+    return packageSize;
+  }
+
+  return 0;
+};
+
+const getVolumeCost = (
+  quantity: number,
+  recipeUnit: string,
+  packageSize: number,
+  packagePrice: number,
+): number | null => {
+  if (recipeUnit === 'cup') {
+    const recipeOunces = quantity * OUNCES_PER_CUP;
+    const costPerOunce = packagePrice / packageSize;
+    return recipeOunces * costPerOunce;
+  }
+
+  if (recipeUnit === 'tbsp') {
+    const recipeOunces = quantity * (OUNCES_PER_CUP / TBSP_PER_CUP);
+    const costPerOunce = packagePrice / packageSize;
+    return recipeOunces * costPerOunce;
+  }
+
+  if (recipeUnit === 'tsp') {
+    const recipeOunces = quantity * (OUNCES_PER_CUP / TSP_PER_CUP);
+    const costPerOunce = packagePrice / packageSize;
+    return recipeOunces * costPerOunce;
+  }
+
+  return null;
+};
+
+const getRecipeGrams = (
+  quantity: number,
+  recipeUnit: string,
+  gramsPerCup?: number,
+): number => {
+  switch (recipeUnit) {
+    case 'cup':
+      if (gramsPerCup !== undefined) {
+        return quantity * gramsPerCup;
+      }
+      break;
+
+    case 'tbsp':
+      if (gramsPerCup !== undefined) {
+        return quantity * (gramsPerCup / TBSP_PER_CUP);
+      }
+      break;
+
+    case 'tsp':
+      if (gramsPerCup !== undefined) {
+        return quantity * (gramsPerCup / TSP_PER_CUP);
+      }
+      break;
+
+    case 'oz':
+      return quantity * GRAMS_PER_OZ;
+
+    case 'g':
+      return quantity;
+
+    default:
+      return 0;
+  }
+
+  return 0;
+};
 
 export const calculateIngredientCost = (
   packageSize: number,
@@ -14,62 +103,24 @@ export const calculateIngredientCost = (
     const costPerItem = packagePrice / packageSize;
     return quantity * costPerItem;
   }
-  let totalPackageGrams = 0;
 
-  if (packageUnit === 'lb') {
-    totalPackageGrams = packageSize * GRAMS_PER_LB;
-  } else if (packageUnit === 'oz') {
-    totalPackageGrams = packageSize * GRAMS_PER_OZ;
+  if (packageUnit === 'oz' && gramsPerCup === undefined) {
+    const volumeCost = getVolumeCost(
+      quantity,
+      recipeUnit,
+      packageSize,
+      packagePrice,
+    );
+
+    if (volumeCost !== null) {
+      return volumeCost;
+    }
   }
+  const totalPackageGrams = getTotalPackageGrams(packageSize, packageUnit);
 
   if (!totalPackageGrams) return 0;
 
-  let recipeGrams = 0;
-
-  switch (recipeUnit) {
-    case 'cup':
-      if (gramsPerCup !== undefined) {
-        // baking items
-        recipeGrams = quantity * gramsPerCup;
-      } else if (packageUnit === 'oz') {
-        // liquids
-        const recipeOunces = quantity * 8;
-        const costPerOunce = packagePrice / packageSize;
-        return recipeOunces * costPerOunce;
-      }
-      break;
-
-    case 'tbsp':
-      if (gramsPerCup !== undefined) {
-        recipeGrams = quantity * (gramsPerCup / 16);
-      } else if (packageUnit === 'oz') {
-        const recipeOunces = quantity * (8 / 16);
-        const costPerOunce = packagePrice / packageSize;
-        return recipeOunces * costPerOunce;
-      }
-      break;
-
-    case 'tsp':
-      if (gramsPerCup !== undefined) {
-        recipeGrams = quantity * (gramsPerCup / 48);
-      } else if (packageUnit === 'oz') {
-        const recipeOunces = quantity * (8 / 48);
-        const costPerOunce = packagePrice / packageSize;
-        return recipeOunces * costPerOunce;
-      }
-      break;
-
-    case 'oz':
-      recipeGrams = quantity * 28.3495;
-      break;
-
-    case 'g':
-      recipeGrams = quantity;
-      break;
-
-    default:
-      recipeGrams = 0;
-  }
+  const recipeGrams = getRecipeGrams(quantity, recipeUnit, gramsPerCup);
 
   if (!recipeGrams) return 0;
 

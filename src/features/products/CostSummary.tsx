@@ -1,14 +1,37 @@
+import { PantryItem } from '../../types/pantry';
 import { Product } from '../../types/products';
+import { calculateIngredientCost } from '../../utils/calculateIngredientCost';
 import { formatMoney } from '../../utils/formatMoney';
 
 export interface CostSummaryProps {
   selectedProduct: Product;
+  pantryItems: PantryItem[];
 }
 
-export const CostSummary = ({ selectedProduct }: CostSummaryProps) => {
-  // Calculate total from your dummy data
+export const CostSummary = ({
+  selectedProduct,
+  pantryItems,
+}: CostSummaryProps) => {
   const currentCost = selectedProduct.recipeIngredients.reduce(
-    (acc, ing) => acc + ing.cost,
+    (total, recipeIngredient) => {
+      console.log(recipeIngredient.name);
+      const pantryItem = pantryItems.find(
+        (item) => item.id === recipeIngredient.pantryItemId,
+      );
+      if (!pantryItem) return total;
+
+      const ingredientCost = calculateIngredientCost(
+        pantryItem.packageSize,
+        pantryItem.packageUnit,
+        pantryItem.packagePrice,
+        pantryItem.gramsPerCup,
+        recipeIngredient.quantity,
+        recipeIngredient.recipeUnit,
+      );
+      console.log('ingredient cost', ingredientCost);
+
+      return total + ingredientCost;
+    },
     0,
   );
 

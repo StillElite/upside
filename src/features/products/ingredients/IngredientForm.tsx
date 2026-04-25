@@ -5,6 +5,7 @@ import Select from 'react-select';
 import type { SingleValue } from 'react-select';
 import { IngredientOption } from './IngredientSection';
 import { RECIPE_UNIT_OPTIONS } from '../../../constants/unit';
+import { parseQuantity } from '../../../utils/parseQuantity';
 
 export interface IngredientFormProps {
   ingredientName: string;
@@ -54,11 +55,6 @@ export const IngredientForm = ({
     onIngredientNameChange(inputValue);
   };
 
-  // const unitOptions = RECIPE_UNITS.map((unit) => ({
-  //   value: unit,
-  //   label: unit,
-  // }));
-
   return (
     <form
       onSubmit={(e) => {
@@ -95,11 +91,9 @@ export const IngredientForm = ({
 
         <input
           id='ingredient-quantity'
-          type='number'
           placeholder='Qty'
           value={quantity}
           onChange={(e) => onQuantityChange(e.target.value)}
-          min={1}
           className='h-[38px] w-28 rounded-[4px] border border-[#c6c8d2] px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#305e88] focus:border-[#305e88]'
         />
         <Select

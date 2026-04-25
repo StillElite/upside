@@ -66,7 +66,6 @@ const productSlice = createSlice({
       ingredient.name = updatedIngredient.name;
       ingredient.quantity = updatedIngredient.quantity;
       ingredient.recipeUnit = updatedIngredient.recipeUnit;
-      ingredient.cost = updatedIngredient.cost;
     },
     deleteIngredient: (
       state,
