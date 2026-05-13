@@ -14,7 +14,6 @@ export const CostSummary = ({
 }: CostSummaryProps) => {
   const currentCost = selectedProduct.recipeIngredients.reduce(
     (total, recipeIngredient) => {
-      console.log(recipeIngredient.name);
       const pantryItem = pantryItems.find(
         (item) => item.id === recipeIngredient.pantryItemId,
       );
@@ -28,7 +27,6 @@ export const CostSummary = ({
         recipeIngredient.quantity,
         recipeIngredient.recipeUnit,
       );
-      console.log('ingredient cost', ingredientCost);
 
       return total + ingredientCost;
     },

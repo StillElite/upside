@@ -8,7 +8,7 @@ interface FormFieldProps {
   error?: string;
   maxLength?: number;
   type?: 'text' | 'number';
-  step?: number | 'any';
+  step?: number | string;
   placeholder?: string;
   min?: number | string;
   max?: number | string;

@@ -6,6 +6,12 @@ interface ProductState {
   products: Product[];
   selectedProductId: string | null;
 }
+
+interface UpdateSellPricePayload {
+  productId: string;
+  newSellPrice: number;
+}
+
 interface AddIngredientPayload {
   productId: string;
   newIngredient: RecipeIngredient;
@@ -37,7 +43,15 @@ const productSlice = createSlice({
     addProduct: (state, action: PayloadAction<Product>) => {
       state.products.unshift(action.payload);
     },
-
+    updateProductSellPrice: (
+      state,
+      action: PayloadAction<UpdateSellPricePayload>,
+    ) => {
+      const { productId, newSellPrice } = action.payload;
+      const product = state.products.find((item) => item.id === productId);
+      if (!product) return;
+      product.sellPrice = newSellPrice;
+    },
     deleteProduct: (state, action: PayloadAction<DeleteProductPayload>) => {
       state.products = state.products.filter(
         (product) => product.id !== action.payload.productId,
@@ -91,5 +105,6 @@ export const {
   addIngredient,
   editIngredient,
   deleteIngredient,
+  updateProductSellPrice,
 } = productSlice.actions;
 export default productSlice.reducer;

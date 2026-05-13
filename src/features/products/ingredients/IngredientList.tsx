@@ -20,6 +20,7 @@ export interface IngredientListProps {
   ingredientOptions: IngredientOption[];
   pantryItems: PantryItem[];
   isAddingIngredient: boolean;
+  isEditingSellPrice: boolean;
   isEditIngredientValid: boolean;
   editingIngredientId: string | null;
   editIngredientName: string;
@@ -40,6 +41,7 @@ export const IngredientList = ({
   ingredientOptions,
   pantryItems,
   isAddingIngredient,
+  isEditingSellPrice,
   isEditIngredientValid,
   editingIngredientId,
   editIngredientName,
@@ -151,7 +153,7 @@ export const IngredientList = ({
                           onClick={() => onStartEdit(recipeIngredient)}
                           disabled={isAddingIngredient}
                         />
-                        {isAddingIngredient && (
+                        {(isAddingIngredient || isEditingSellPrice) && (
                           <span
                             className={`absolute right-0 bottom-full w-max whitespace-normal rounded bg-slate-800 text-white px-2 py-1 text-xs opacity-0 translate-y-3 group-hover/button:opacity-100 group-hover:translate-y-3 transition-all duration-200 ease-out z-10 shadow-lg`}
                           >

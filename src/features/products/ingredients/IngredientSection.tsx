@@ -18,6 +18,11 @@ import { parseQuantity } from '../../../utils/parseQuantity';
 
 export interface IngredientSectionProps {
   recipeIngredients: RecipeIngredient[];
+  isAddingIngredient: boolean;
+  isEditingFlow: boolean;
+  isEditingSellPrice: boolean;
+  setIsAddingIngredient: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsEditingFlow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type IngredientOption = {
@@ -29,11 +34,14 @@ export type IngredientOption = {
 
 export const IngredientSection = ({
   recipeIngredients,
+  isAddingIngredient,
+  isEditingFlow,
+  isEditingSellPrice,
+  setIsAddingIngredient,
+  setIsEditingFlow,
 }: IngredientSectionProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const listRef = useRef<HTMLDivElement | null>(null);
-  const [isAddingIngredient, setIsAddingIngredient] = useState(false);
-  const [isEditingFlow, setIsEditingFlow] = useState(false);
   const [addIngredientForm, setAddIngredientForm] = useState({
     name: '',
     quantity: '',
@@ -239,7 +247,7 @@ export const IngredientSection = ({
     setIsEditingFlow(false);
   };
 
-  const handleStartEdit = (recipeIngredient: RecipeIngredient) => {
+  const handleStartEditIngredient = (recipeIngredient: RecipeIngredient) => {
     setEditForm({
       id: recipeIngredient.id,
       name: recipeIngredient.name,
@@ -344,11 +352,11 @@ export const IngredientSection = ({
                 icon={isAddingIngredient ? faCaretDown : faCaretRight}
                 iconPosition='right'
                 onClick={handleToggleAddIngredient}
-                disabled={isEditingFlow}
+                disabled={isEditingFlow || isEditingSellPrice}
               />
-              {isEditingFlow && (
+              {(isEditingFlow || isEditingSellPrice) && (
                 <span
-                  className={`absolute right-0 bottom-full w-max whitespace-normal rounded bg-slate-800 text-white px-2 py-1 text-xs  opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out z-10 shadow-lg`}
+                  className={`absolute right-0 bottom-full w-max whitespace-normal rounded bg-slate-800 text-white px-2 py-1 text-xs opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out z-10 shadow-lg`}
                 >
                   Complete or cancel the current form
                 </span>
@@ -400,6 +408,7 @@ export const IngredientSection = ({
           ingredientOptions={ingredientOptions}
           pantryItems={pantryItems}
           isAddingIngredient={isAddingIngredient}
+          isEditingSellPrice={isEditingSellPrice}
           isEditIngredientValid={isEditIngredientValid}
           onEditingChange={setIsEditingFlow}
           onIngredientOptionChange={setSelectedIngredientOption}
@@ -414,7 +423,7 @@ export const IngredientSection = ({
           editIngredientName={editForm.name}
           editQuantity={editForm.quantity}
           editRecipeUnit={editForm.recipeUnit}
-          onStartEdit={handleStartEdit}
+          onStartEdit={handleStartEditIngredient}
           onSave={isEditingFlow ? handleSaveEdit : handleSaveNewIngredient}
           onCancel={handleCancelIngredientForm}
         />
