@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { setSelectedProductId } from '../../store/slices/productSlice';
+import { SidebarProductItem } from './SidebarProductItem';
 
 interface SidebarProps {
   activeView: 'product' | 'pantry';
@@ -21,11 +22,17 @@ export const Sidebar = ({
   setActiveView,
   onAddProduct,
 }: SidebarProps) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [openMenuProductId, setOpenMenuProductId] = useState<string | null>(
+    null,
+  );
+  const productMenuRef = useRef<HTMLDivElement | null>(null);
+
   const { products, selectedProductId } = useSelector(
     (state: RootState) => state.products,
   );
-  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const dispatch = useDispatch<AppDispatch>();
   const selectedItemRef = useRef<HTMLLIElement | null>(null);
 
   const asideClasses =
@@ -45,6 +52,23 @@ export const Sidebar = ({
       block: 'nearest',
     });
   }, [selectedProductId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        productMenuRef.current &&
+        !productMenuRef.current.contains(event.target as Node)
+      ) {
+        setOpenMenuProductId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <aside className={asideClasses} aria-label='Sidebar navigation'>
@@ -108,36 +132,18 @@ export const Sidebar = ({
         <div className='flex-1 overflow-y-auto custom-scrollbar'>
           <ul>
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => {
-                const isActive = selectedProductId === product.id;
-
-                return (
-                  <li
-                    key={product.id}
-                    ref={
-                      selectedProductId === product.id ? selectedItemRef : null
-                    }
-                    className='border-t border-white/10'
-                  >
-                    <button
-                      type='button'
-                      className={`w-full py-3 pl-12 text-left transition-colors ${
-                        isActive
-                          ? 'bg-[#22384c] font-semibold text-white'
-                          : 'text-slate-300 hover:bg-[#274f72] hover:text-white'
-                      }`}
-                      onClick={() => {
-                        dispatch(setSelectedProductId(product.id));
-                        setActiveView('product');
-                        setSearchTerm('');
-                      }}
-                      aria-current={isActive ? 'true' : undefined}
-                    >
-                      {product.name}
-                    </button>
-                  </li>
-                );
-              })
+              filteredProducts.map((product) => (
+                <SidebarProductItem
+                  product={product}
+                  selectedProductId={selectedProductId}
+                  selectedItemRef={selectedItemRef}
+                  productMenuRef={productMenuRef}
+                  openMenuProductId={openMenuProductId}
+                  setOpenMenuProductId={setOpenMenuProductId}
+                  setActiveView={setActiveView}
+                  setSearchTerm={setSearchTerm}
+                />
+              ))
             ) : (
               <li className='px-6 py-4 text-sm text-slate-400'>
                 No results found
