@@ -134,6 +134,7 @@ export const Sidebar = ({
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
                 <SidebarProductItem
+                  key={product.id}
                   product={product}
                   selectedProductId={selectedProductId}
                   selectedItemRef={selectedItemRef}

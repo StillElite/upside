@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { FormModal } from '../../components/FormModal';
 import { FormField } from '../../components/FormField';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { hasDuplicateProductName } from '../../utils/hasDuplicateProductName';
 
 interface NewProductModalProps {
   isOpen: boolean;
@@ -17,8 +20,16 @@ export const NewProductModal = ({
   const [sellPrice, setSellPrice] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+  const { products } = useSelector((state: RootState) => state.products);
+
   const handleSubmit = () => {
     const newErrors: { [key: string]: string } = {};
+
+    const isDuplicateProductName = hasDuplicateProductName(products, name);
+
+    if (isDuplicateProductName) {
+      newErrors.name = 'A product with that name already exists.';
+    }
 
     if (!name.trim()) {
       newErrors.name = 'Please enter a name.';
