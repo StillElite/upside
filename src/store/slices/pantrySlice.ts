@@ -6,10 +6,13 @@ interface PantryState {
   pantryItems: PantryItem[];
 }
 
-// interface AddItemPayload {
-//   itemId: string;
-//   newItem: PantryItem;
-// }
+interface UpdatePantryItemPayload {
+  updatedPantryItem: PantryItem;
+}
+
+interface DeletePantryItemPayload {
+  pantryItemId: string;
+}
 
 const initialState: PantryState = {
   pantryItems,
@@ -22,8 +25,25 @@ const pantrySlice = createSlice({
     addItem: (state, action: PayloadAction<PantryItem>) => {
       state.pantryItems.unshift(action.payload);
     },
+    editItem: (state, action: PayloadAction<UpdatePantryItemPayload>) => {
+      const { updatedPantryItem } = action.payload;
+      const pantryItem = state.pantryItems.find(
+        (item) => item.id === updatedPantryItem.id,
+      );
+      if (!pantryItem) return;
+
+      pantryItem.name = updatedPantryItem.name;
+      pantryItem.packagePrice = updatedPantryItem.packagePrice;
+      pantryItem.packageSize = updatedPantryItem.packageSize;
+      pantryItem.packageUnit = updatedPantryItem.packageUnit;
+    },
+    deleteItem: (state, action: PayloadAction<DeletePantryItemPayload>) => {
+      state.pantryItems = state.pantryItems.filter(
+        (pantryItem) => pantryItem.id !== action.payload.pantryItemId,
+      );
+    },
   },
 });
 
-export const { addItem } = pantrySlice.actions;
+export const { addItem, editItem, deleteItem } = pantrySlice.actions;
 export default pantrySlice.reducer;

@@ -5,7 +5,6 @@ import Select from 'react-select';
 import type { SingleValue } from 'react-select';
 import { IngredientOption } from './IngredientSection';
 import { RECIPE_UNIT_OPTIONS } from '../../../constants/unit';
-import { parseQuantity } from '../../../utils/parseQuantity';
 
 export interface IngredientFormProps {
   ingredientName: string;

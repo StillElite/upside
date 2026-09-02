@@ -11,10 +11,12 @@ import { Product } from '../../types/products';
 import {
   setSelectedProductId,
   updateProductName,
+  deleteProduct,
 } from '../../store/slices/productSlice';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { hasDuplicateProductName } from '../../utils/hasDuplicateProductName';
+import { ConfirmModal } from '../../components/ConfirmModal';
 
 interface SidebarProductItemProps {
   product: Product;
@@ -40,11 +42,19 @@ export const SidebarProductItem = ({
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [productNameInput, setProductNameInput] = useState(product.name);
   const [shouldSelectInput, setShouldSelectInput] = useState(false);
+
   const dispatch = useDispatch<AppDispatch>();
   const { products } = useSelector((state: RootState) => state.products);
 
   const isActive = selectedProductId === product.id;
   const isEditing = editingProductId === product.id;
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const confirmMessage = (
+    <>
+      Are you sure you want to delete <strong>{product.name}</strong>?
+    </>
+  );
 
   const handleSubmit = () => {
     const isDuplicateProductName = hasDuplicateProductName(
@@ -74,6 +84,26 @@ export const SidebarProductItem = ({
     );
 
     toast.success(`Product name updated successfully`);
+  };
+
+  const handleDeleteProduct = () => {
+    dispatch(deleteProduct({ productId: product.id }));
+
+    const remainingProducts = products.filter(
+      (existingProduct) => existingProduct.id !== product.id,
+    );
+
+    let nextSelectedId = selectedProductId;
+
+    if (selectedProductId === product.id) {
+      nextSelectedId = remainingProducts[0]?.id ?? null;
+    }
+
+    dispatch(setSelectedProductId(nextSelectedId));
+
+    toast.success(`Product deleted successfully`);
+
+    setIsConfirmOpen(false);
   };
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -156,9 +186,9 @@ export const SidebarProductItem = ({
                   aria-hidden='true'
                   className='text-xs'
                 />{' '}
-                Rename
+                Rename {product.name}
               </li>
-              <li>
+              <li onClick={() => setIsConfirmOpen(true)}>
                 <FontAwesomeIcon
                   icon={faTrashAlt}
                   aria-hidden='true'
@@ -168,6 +198,14 @@ export const SidebarProductItem = ({
               </li>
             </ul>
           )}
+          <ConfirmModal
+            isOpen={isConfirmOpen}
+            onClose={() => setIsConfirmOpen(false)}
+            onConfirm={handleDeleteProduct}
+            title='Delete Product'
+            confirmLabel='Delete'
+            message={confirmMessage}
+          />
         </div>
       )}
     </li>

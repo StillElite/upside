@@ -148,7 +148,6 @@ export const AddPantryItemModal = ({
                 }),
               }}
               className='w-full rounded-md text-sm'
-              // className='min-w-[140px] rounded-md px-2 py-1 text-sm'
             />
           </div>
         </div>
