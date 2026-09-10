@@ -30,7 +30,10 @@ export interface IngredientListProps {
   onEditQuantityChange: (value: string) => void;
   onEditRecipeUnitChange: (value: string) => void;
   onEditingChange: (isEditing: boolean) => void;
-  onStartEdit: (recipeIngredient: RecipeIngredient) => void;
+  onStartEdit: (
+    recipeIngredient: RecipeIngredient,
+    ingredientName: string,
+  ) => void;
   onIngredientOptionChange: (option: IngredientOption | null) => void;
   onSave: () => void;
   onCancel: () => void;
@@ -93,11 +96,12 @@ export const IngredientList = ({
           const numberDisplay = index + 1;
           const isEditing = editingIngredientId === id;
 
-          const getIngredientCost = (recipeIngredient: RecipeIngredient) => {
-            const pantryItem = pantryItems.find(
-              (item) => item.id === recipeIngredient.pantryItemId,
-            );
+          const pantryItem = pantryItems.find(
+            (item) => item.id === recipeIngredient.pantryItemId,
+          );
+          const ingredientName = pantryItem?.name ?? recipeIngredient.name;
 
+          const getIngredientCost = () => {
             return calculateIngredientCost(
               pantryItem?.packageSize ?? 0,
               pantryItem?.packageUnit ?? '',
@@ -131,16 +135,14 @@ export const IngredientList = ({
                       <span className='flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#315e88] text-white text-[14px] font-semibold'>
                         {numberDisplay}
                       </span>
-                      <strong>{name}</strong>
+                      <strong>{ingredientName}</strong>
                       <span>-</span>
                       <span>
                         {formatQuantity(quantity)}{' '}
                         {formatUnit(recipeUnit, quantity)}
                       </span>
                       <span>-</span>
-                      <strong>
-                        {formatMoney(getIngredientCost(recipeIngredient))}
-                      </strong>
+                      <strong>{formatMoney(getIngredientCost())}</strong>
                     </div>
 
                     <div className='flex items-center gap-3 group-focus-within:opacity-100 transition-opacity'>
@@ -150,7 +152,9 @@ export const IngredientList = ({
                           variant='icon-only'
                           className='text-gray-400 hover:text-[#305e88]'
                           aria-label={`Edit ${name}`}
-                          onClick={() => onStartEdit(recipeIngredient)}
+                          onClick={() =>
+                            onStartEdit(recipeIngredient, ingredientName)
+                          }
                           disabled={isAddingIngredient}
                         />
                         {(isAddingIngredient || isEditingSellPrice) && (

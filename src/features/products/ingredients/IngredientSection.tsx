@@ -85,6 +85,9 @@ export const IngredientSection = ({
     label: item.name,
     pantryItemId: item.id,
   }));
+  const sortedIngredientOptions = ingredientOptions.toSorted((a, b) =>
+    a.label.localeCompare(b.label),
+  );
 
   const isNewIngredientValid =
     addIngredientForm.name.trim() !== '' &&
@@ -247,10 +250,13 @@ export const IngredientSection = ({
     setIsEditingFlow(false);
   };
 
-  const handleStartEditIngredient = (recipeIngredient: RecipeIngredient) => {
+  const handleStartEditIngredient = (
+    recipeIngredient: RecipeIngredient,
+    ingredientName: string,
+  ) => {
     setEditForm({
       id: recipeIngredient.id,
-      name: recipeIngredient.name,
+      name: ingredientName,
       quantity: recipeIngredient.quantity.toString(),
       recipeUnit: recipeIngredient.recipeUnit,
     });
@@ -379,7 +385,7 @@ export const IngredientSection = ({
             ingredientName={addIngredientForm.name}
             quantity={addIngredientForm.quantity}
             recipeUnit={addIngredientForm.recipeUnit}
-            options={ingredientOptions}
+            options={sortedIngredientOptions}
             onIngredientNameChange={(value) =>
               handleAddFormChange('name', value)
             }
@@ -405,7 +411,7 @@ export const IngredientSection = ({
       >
         <IngredientList
           recipeIngredients={recipeIngredients}
-          ingredientOptions={ingredientOptions}
+          ingredientOptions={sortedIngredientOptions}
           pantryItems={pantryItems}
           isAddingIngredient={isAddingIngredient}
           isEditingSellPrice={isEditingSellPrice}

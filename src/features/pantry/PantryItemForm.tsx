@@ -39,6 +39,12 @@ export const PantryItemForm = ({
 
   const { id, name, packageSize, packageUnit, packagePrice } = item;
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && isValid) {
+      onSubmit();
+    }
+  };
+
   return (
     <tr id={id} className='border-t border-[#c6c8d2] bg-[#E0E7EC]'>
       <td className='px-4 py-3'>
@@ -47,6 +53,7 @@ export const PantryItemForm = ({
           placeholder='name'
           value={editPantryItemName}
           onChange={(e) => onEditNameChange(e.target.value)}
+          onKeyDown={handleKeyDown}
           className='h-[38px] w-48 rounded-[4px] border border-[#c6c8d2] px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#305e88] focus:border-[#305e88]'
         />
       </td>
@@ -57,6 +64,7 @@ export const PantryItemForm = ({
             id={`pantry-item-${packageSize}`}
             value={editPantryItemSize}
             onChange={(e) => onEditSizeChange(e.target.value)}
+            onKeyDown={handleKeyDown}
             type='number'
             className='h-[38px] w-20 rounded-[4px] border border-[#c6c8d2] px-3 text-sm focus:border-[#305e88] focus:outline-none focus:ring-2 focus:ring-[#305e88]'
           />
@@ -97,6 +105,7 @@ export const PantryItemForm = ({
             id={`pantry-item-${packagePrice}`}
             value={editPantryItemPrice}
             onChange={(e) => onEditPriceChange(e.target.value)}
+            onKeyDown={handleKeyDown}
             type='number'
             step='0.01'
             min='0'
