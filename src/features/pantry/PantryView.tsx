@@ -3,10 +3,16 @@ import { PantryTable } from './PantryTable';
 import { PantryToolbar } from './PantryToolbar';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { useState } from 'react';
 
 export const PantryView = () => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const pantryItems = useSelector(
     (state: RootState) => state.pantry.pantryItems,
+  );
+
+  const filteredPantryItems = pantryItems.filter((pantryItems) =>
+    pantryItems.name.toLowerCase().includes(searchTerm.trim().toLowerCase()),
   );
 
   return (
@@ -20,12 +26,15 @@ export const PantryView = () => {
         aria-labelledby='pantry-section'
         className='flex flex-col flex-1 p-8 bg-[#f3f5f2] overflow-hidden'
       >
-        <PantryToolbar />
-        <PantryTable pantryItems={pantryItems} />
+        <PantryToolbar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        <PantryTable pantryItems={filteredPantryItems} />
         <footer className='shrink-0 pt-6 pb-2 mt-auto border-t border-[#c6c8d2]/40 bg-[#f3f5f2]'>
           <p className='text-[#1c2b3d]/50 italic text-[13px] tracking-wide'>
             Pantry ingredients provide the base cost data used in all recipe
             calculations.
+          </p>
+          <p className='text-[#1c2b3d]/50 italic text-[13px] tracking-wide'>
+            Ingredients currently used in a recipe cannot be deleted.
           </p>
         </footer>
       </div>

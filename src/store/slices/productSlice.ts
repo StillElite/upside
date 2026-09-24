@@ -36,6 +36,10 @@ interface DeleteIngredientPayload {
   ingredientId: string;
 }
 
+interface ReferenceCostPayload {
+  productId: string;
+  newReferenceCost: number;
+}
 const initialState: ProductState = {
   products,
   selectedProductId: products[0].id,
@@ -65,6 +69,12 @@ const productSlice = createSlice({
       const product = state.products.find((item) => item.id === productId);
       if (!product) return;
       product.sellPrice = newSellPrice;
+    },
+    setReferenceCost: (state, action: PayloadAction<ReferenceCostPayload>) => {
+      const { productId, newReferenceCost } = action.payload;
+      const product = state.products.find((item) => item.id === productId);
+      if (!product) return;
+      product.referenceCost = newReferenceCost;
     },
     deleteProduct: (state, action: PayloadAction<DeleteProductPayload>) => {
       state.products = state.products.filter(
@@ -114,12 +124,13 @@ const productSlice = createSlice({
 
 export const {
   addProduct,
+  updateProductName,
+  updateProductSellPrice,
+  setReferenceCost,
   deleteProduct,
   setSelectedProductId,
   addIngredient,
   editIngredient,
   deleteIngredient,
-  updateProductName,
-  updateProductSellPrice,
 } = productSlice.actions;
 export default productSlice.reducer;

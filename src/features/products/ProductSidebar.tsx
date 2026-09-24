@@ -1,74 +1,38 @@
-import { useState } from 'react';
-import { Button } from '../../components/Button';
-import { ConfirmModal } from '../../components/ConfirmModal';
 import { PanelCard } from '../../components/PanelCard';
 import { CostSummary } from './CostSummary';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import {
-  deleteProduct,
-  setSelectedProductId,
-} from '../../store/slices/productSlice';
-import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
-export const ProductSidebar = () => {
-  const dispatch = useDispatch<AppDispatch>();
+export interface ProductSidebarProps {
+  currentCost: number;
+  referenceCost?: number;
+}
+
+export const ProductSidebar = ({
+  currentCost,
+  referenceCost,
+}: ProductSidebarProps) => {
   const { products, selectedProductId } = useSelector(
     (state: RootState) => state.products,
   );
-
-  const { pantryItems } = useSelector((state: RootState) => state.pantry);
 
   const selectedProduct =
     products.find((p) => p.id === selectedProductId) ?? null;
 
   if (!selectedProduct) return null;
 
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const confirmMessage = (
-    <>
-      Are you sure you want to delete <strong>{selectedProduct.name}</strong>?
-    </>
-  );
-
-  const handleDeleteProduct = () => {
-    dispatch(deleteProduct({ productId: selectedProduct.id }));
-
-    const remainingProducts = products.filter(
-      (product) => product.id !== selectedProduct.id,
-    );
-
-    const nextSelectedId = remainingProducts[0]?.id ?? null;
-    dispatch(setSelectedProductId(nextSelectedId));
-
-    toast.success(`Product deleted successfully`);
-
-    setIsConfirmOpen(false);
-  };
   return (
     <div className='flex flex-col gap-2'>
       <PanelCard title='Cost & Profit'>
         <CostSummary
           selectedProduct={selectedProduct}
-          pantryItems={pantryItems}
+          currentCost={currentCost}
+          referenceCost={referenceCost}
         />
       </PanelCard>
 
-      <PanelCard title='Quick Action'>
-        <Button
-          text='Delete Recipe'
-          variant='destructive'
-          aria-label={`Delete ${selectedProduct.name}`}
-          onClick={() => setIsConfirmOpen(true)}
-        />
-        <ConfirmModal
-          isOpen={isConfirmOpen}
-          onClose={() => setIsConfirmOpen(false)}
-          onConfirm={handleDeleteProduct}
-          title='Delete Product'
-          confirmLabel='Delete'
-          message={confirmMessage}
-        />
+      <PanelCard title='By the Slice'>
+        <p>hi</p>
       </PanelCard>
     </div>
   );

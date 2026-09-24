@@ -8,7 +8,15 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
 import { addItem } from '../../store/slices/pantrySlice';
 
-export const PantryToolbar = () => {
+export interface PantryToolbarProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+}
+
+export const PantryToolbar = ({
+  searchTerm,
+  onSearchChange,
+}: PantryToolbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const [isAddPantryItemOpen, setIsAddPantryItemOpen] = useState(false);
 
@@ -45,6 +53,10 @@ export const PantryToolbar = () => {
           id='ingredient-filter'
           type='text'
           placeholder='Search...'
+          value={searchTerm}
+          onChange={(e) => {
+            onSearchChange(e.target.value);
+          }}
           className='w-full rounded-md border border-[#c6c8d2] bg-white pl-9 pr-3 py-2 text-sm text-[#1c2b3d] shadow-sm focus:outline-none focus:border-[#315e88] focus-visible:ring-2 focus-visible:ring-[#315e88]'
         />
       </div>

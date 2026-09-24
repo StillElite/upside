@@ -7,6 +7,7 @@ import type { AppDispatch, RootState } from '../../../store/store';
 import {
   addIngredient,
   editIngredient,
+  setReferenceCost,
 } from '../../../store/slices/productSlice';
 import { IngredientForm } from './IngredientForm';
 import { IngredientList } from './IngredientList';
@@ -15,9 +16,11 @@ import { AddPantryItemModal } from '../../pantry/AddPantryItemModal';
 import { PantryItem } from '../../../types/pantry';
 import { addItem } from '../../../store/slices/pantrySlice';
 import { parseQuantity } from '../../../utils/parseQuantity';
+import { ConfirmModal } from '../../../components/ConfirmModal';
 
 export interface IngredientSectionProps {
   recipeIngredients: RecipeIngredient[];
+  currentCost: number;
   isAddingIngredient: boolean;
   isEditingFlow: boolean;
   isEditingSellPrice: boolean;
@@ -34,6 +37,7 @@ export type IngredientOption = {
 
 export const IngredientSection = ({
   recipeIngredients,
+  currentCost,
   isAddingIngredient,
   isEditingFlow,
   isEditingSellPrice,
@@ -42,6 +46,7 @@ export const IngredientSection = ({
 }: IngredientSectionProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const listRef = useRef<HTMLDivElement | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [addIngredientForm, setAddIngredientForm] = useState({
     name: '',
     quantity: '',
@@ -338,6 +343,28 @@ export const IngredientSection = ({
     });
   };
 
+  const handleSetReferenceCost = () => {
+    if (!selectedProductId) {
+      return;
+    }
+
+    dispatch(
+      setReferenceCost({
+        productId: selectedProductId,
+        newReferenceCost: currentCost,
+      }),
+    );
+    toast.success('Reference cost successfully updated');
+    setIsConfirmOpen(false);
+  };
+
+  const confirmMessage = (
+    <>
+      Are you sure you want to set this reference cost{' '}
+      <strong>{currentCost.toFixed(2)}</strong>?
+    </>
+  );
+
   useEffect(() => {
     if (isAddingIngredient) {
       setIsAddingIngredient(false);
@@ -373,8 +400,18 @@ export const IngredientSection = ({
               text='Set Reference'
               className='text-xs'
               variant='secondary'
-              icon={faCaretRight}
-              iconPosition='right'
+              aria-label='Set Reference'
+              onClick={() => {
+                setIsConfirmOpen(true);
+              }}
+            />
+            <ConfirmModal
+              isOpen={isConfirmOpen}
+              onClose={() => setIsConfirmOpen(false)}
+              onConfirm={handleSetReferenceCost}
+              title='Set Reference Cost'
+              confirmLabel='Set reference'
+              message={confirmMessage}
             />
           </div>
         </div>

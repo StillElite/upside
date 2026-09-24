@@ -3,8 +3,8 @@ import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../components/Button';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
 import { editItem, deleteItem } from '../../store/slices/pantrySlice';
 import toast from 'react-hot-toast';
 import { PantryItemForm } from './PantryItemForm';
@@ -21,6 +21,7 @@ export type PantryItemOption = {
 
 export const PantryTable = ({ pantryItems }: PantryTableProps) => {
   const dispatch = useDispatch<AppDispatch>();
+  const { products } = useSelector((state: RootState) => state.products);
 
   const [editPantryItemForm, setEditPantryItemForm] = useState({
     id: '',
@@ -179,6 +180,12 @@ export const PantryTable = ({ pantryItems }: PantryTableProps) => {
               const { id, name, packageSize, packageUnit, packagePrice } = item;
               const isEditing = editingPantryItemId === id;
 
+              const isPantryItemInUse = products.some((product) =>
+                product.recipeIngredients.some(
+                  (ingredient) => ingredient.pantryItemId === item.id,
+                ),
+              );
+
               return (
                 <React.Fragment key={item.id}>
                   {isEditing ? (
@@ -223,23 +230,27 @@ export const PantryTable = ({ pantryItems }: PantryTableProps) => {
 
                       <td className='px-4 py-3 text-right'>
                         <div className='flex justify-end items-center gap-1'>
+                          {!isPantryItemInUse && (
+                            <>
+                              <Button
+                                icon={faTrash}
+                                variant='icon-only'
+                                className='text-slate-400 hover:text-[#ba3d3d]'
+                                aria-label={`Delete ${name}`}
+                                onClick={() => {
+                                  setPantryItemToDelete(item);
+                                  setIsConfirmOpen(true);
+                                }}
+                              />
+                              <span className='px-2'>|</span>
+                            </>
+                          )}
                           <Button
                             icon={faPencil}
                             variant='icon-only'
                             className='text-slate-400 hover:text-[#305e88]'
                             aria-label={`Edit ${name}`}
                             onClick={() => handleStartEditPantryItem(item, id)}
-                          />
-                          <span className='px-2'>|</span>
-                          <Button
-                            icon={faTrash}
-                            variant='icon-only'
-                            className='text-slate-400 hover:text-[#ba3d3d]'
-                            aria-label={`Delete ${name}`}
-                            onClick={() => {
-                              setPantryItemToDelete(item);
-                              setIsConfirmOpen(true);
-                            }}
                           />
                         </div>
                       </td>

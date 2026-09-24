@@ -11,9 +11,13 @@ import toast from 'react-hot-toast';
 
 export interface ProductDetailsProps {
   selectedProduct: Product;
+  currentCost: number;
 }
 
-export const ProductDetails = ({ selectedProduct }: ProductDetailsProps) => {
+export const ProductDetails = ({
+  selectedProduct,
+  currentCost,
+}: ProductDetailsProps) => {
   const [sellPriceInput, setSellPriceInput] = useState<string>(
     selectedProduct.sellPrice.toString(),
   );
@@ -131,6 +135,7 @@ export const ProductDetails = ({ selectedProduct }: ProductDetailsProps) => {
         isEditingSellPrice={isEditingSellPrice}
         setIsAddingIngredient={setIsAddingIngredient}
         setIsEditingFlow={setIsEditingFlow}
+        currentCost={currentCost}
       />
 
       <footer className='shrink-0 pt-6 pb-2 mt-auto border-t border-[#c6c8d2]/40'>
