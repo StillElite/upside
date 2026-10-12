@@ -20,11 +20,17 @@ const AppLayout: React.FC = () => {
   const handleCreateProduct = (newProductData: {
     name: string;
     sellPrice: number;
+    sellIndividually: boolean;
+    portionCount: number;
+    individualPrice: number;
   }) => {
     const newProduct: Product = {
       id: crypto.randomUUID(),
       name: newProductData.name,
       sellPrice: newProductData.sellPrice,
+      sellIndividually: newProductData.sellIndividually,
+      portionCount: newProductData.portionCount,
+      individualPrice: newProductData.individualPrice,
       recipeIngredients: [],
     };
     dispatch(addProduct(newProduct));

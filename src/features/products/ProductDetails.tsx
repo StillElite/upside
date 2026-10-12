@@ -52,7 +52,7 @@ export const ProductDetails = ({
     toast.success(`${selectedProduct.name} price updated successfully`);
   };
 
-  const handleClose = () => {
+  const handleEdit = () => {
     setIsEditingSellPrice((prev) => !prev);
     setSellPriceInput(sellPrice.toString());
   };
@@ -114,7 +114,7 @@ export const ProductDetails = ({
                 variant='icon-only'
                 className='text-gray-400 hover:text-[#305e88]'
                 aria-label={`Edit Price`}
-                onClick={() => handleClose()}
+                onClick={() => handleEdit()}
                 disabled={isAddingIngredient || isEditingFlow}
               />
               {(isAddingIngredient || isEditingFlow) && (

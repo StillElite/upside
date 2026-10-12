@@ -9,6 +9,9 @@ export const products: Product[] = [
     id: '1',
     name: 'Pound Cake',
     sellPrice: 38,
+    sellIndividually: true,
+    portionCount: 12,
+    individualPrice: 4,
     recipeIngredients: [
       {
         id: '1',
@@ -100,6 +103,9 @@ export const products: Product[] = [
     id: '2',
     name: 'Chocolate Chip Cookies',
     sellPrice: 22,
+    sellIndividually: false,
+    portionCount: 12,
+    individualPrice: 3,
     recipeIngredients: [
       {
         id: '1',
@@ -127,6 +133,9 @@ export const products: Product[] = [
   {
     id: '3',
     name: 'Lemon Bars',
+    sellIndividually: true,
+    portionCount: 8,
+    individualPrice: 3,
     sellPrice: 24,
     recipeIngredients: [
       {
@@ -192,6 +201,7 @@ export const products: Product[] = [
     id: '4',
     name: 'German Chocolate Cake',
     sellPrice: 50,
+    sellIndividually: false,
     recipeIngredients: [
       {
         id: '1',
@@ -285,6 +295,13 @@ export const products: Product[] = [
         recipeUnit: 'cup',
       },
     ],
+  },
+  {
+    id: '5',
+    name: 'Strawberry Cake',
+    sellPrice: 36,
+    sellIndividually: true,
+    recipeIngredients: [],
   },
 ];
 

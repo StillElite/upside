@@ -40,6 +40,17 @@ interface ReferenceCostPayload {
   productId: string;
   newReferenceCost: number;
 }
+
+interface UpdatePortionCountPayload {
+  productId: string;
+  newPortionCount: number;
+}
+
+interface UpdateIndividualPricePayload {
+  productId: string;
+  newIndividualPrice: number;
+}
+
 const initialState: ProductState = {
   products,
   selectedProductId: products[0].id,
@@ -69,6 +80,24 @@ const productSlice = createSlice({
       const product = state.products.find((item) => item.id === productId);
       if (!product) return;
       product.sellPrice = newSellPrice;
+    },
+    updatePortionCountPrice: (
+      state,
+      action: PayloadAction<UpdatePortionCountPayload>,
+    ) => {
+      const { productId, newPortionCount } = action.payload;
+      const product = state.products.find((item) => item.id === productId);
+      if (!product) return;
+      product.portionCount = newPortionCount;
+    },
+    updateIndividualPrice: (
+      state,
+      action: PayloadAction<UpdateIndividualPricePayload>,
+    ) => {
+      const { productId, newIndividualPrice } = action.payload;
+      const product = state.products.find((item) => item.id === productId);
+      if (!product) return;
+      product.individualPrice = newIndividualPrice;
     },
     setReferenceCost: (state, action: PayloadAction<ReferenceCostPayload>) => {
       const { productId, newReferenceCost } = action.payload;
@@ -126,6 +155,8 @@ export const {
   addProduct,
   updateProductName,
   updateProductSellPrice,
+  updatePortionCountPrice,
+  updateIndividualPrice,
   setReferenceCost,
   deleteProduct,
   setSelectedProductId,

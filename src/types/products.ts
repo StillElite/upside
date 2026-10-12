@@ -12,6 +12,7 @@ export interface Product {
   sellPrice: number;
   recipeIngredients: RecipeIngredient[];
   referenceCost?: number;
-  // sellIndividually: boolean;
-  // portionCount?: number;
+  sellIndividually: boolean;
+  portionCount?: number;
+  individualPrice?: number;
 }

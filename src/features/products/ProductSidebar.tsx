@@ -2,6 +2,7 @@ import { PanelCard } from '../../components/PanelCard';
 import { CostSummary } from './CostSummary';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { IndividualPricing } from './IndividualPricing';
 
 export interface ProductSidebarProps {
   currentCost: number;
@@ -30,10 +31,16 @@ export const ProductSidebar = ({
           referenceCost={referenceCost}
         />
       </PanelCard>
-
-      <PanelCard title='By the Slice'>
-        <p>hi</p>
-      </PanelCard>
+      {selectedProduct.sellIndividually && (
+        <PanelCard title='Individual Pricing'>
+          <IndividualPricing
+            selectedProductId={selectedProductId}
+            portionCount={selectedProduct.portionCount}
+            individualPrice={selectedProduct.individualPrice}
+            currentCost={currentCost}
+          />
+        </PanelCard>
+      )}
     </div>
   );
 };
