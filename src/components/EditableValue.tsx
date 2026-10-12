@@ -22,7 +22,7 @@ export const EditableValue = ({
   );
   const valueCountClass = value ? '' : 'text-gray-400 font-normal';
 
-  let valueDisplay: string | number = '—';
+  let valueDisplay: string | number = '-';
 
   if (value !== undefined && value > 0) {
     valueDisplay = isCurrency ? formatMoney(value) : value;

@@ -30,6 +30,9 @@ interface UpdateIngredientPayload {
 interface DeleteProductPayload {
   productId: string;
 }
+interface ToggleIndividualPricingPayload {
+  productId: string;
+}
 
 interface DeleteIngredientPayload {
   productId: string;
@@ -110,6 +113,15 @@ const productSlice = createSlice({
         (product) => product.id !== action.payload.productId,
       );
     },
+    toggleIndividualPricing: (
+      state,
+      action: PayloadAction<ToggleIndividualPricingPayload>,
+    ) => {
+      const { productId } = action.payload;
+      const product = state.products.find((item) => item.id === productId);
+      if (!product) return;
+      product.sellIndividually = !product.sellIndividually;
+    },
     setSelectedProductId: (state, action: PayloadAction<string | null>) => {
       state.selectedProductId = action.payload;
     },
@@ -163,5 +175,6 @@ export const {
   addIngredient,
   editIngredient,
   deleteIngredient,
+  toggleIndividualPricing,
 } = productSlice.actions;
 export default productSlice.reducer;

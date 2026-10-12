@@ -9,7 +9,7 @@ export interface RecipeIngredient {
 export interface Product {
   id: string;
   name: string;
-  sellPrice: number;
+  sellPrice?: number;
   recipeIngredients: RecipeIngredient[];
   referenceCost?: number;
   sellIndividually: boolean;

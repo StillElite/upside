@@ -19,7 +19,7 @@ export const ProductDetails = ({
   currentCost,
 }: ProductDetailsProps) => {
   const [sellPriceInput, setSellPriceInput] = useState<string>(
-    selectedProduct.sellPrice.toString(),
+    selectedProduct.sellPrice?.toString() ?? '',
   );
   const [isAddingIngredient, setIsAddingIngredient] = useState(false);
   const [isEditingFlow, setIsEditingFlow] = useState(false);
@@ -30,16 +30,19 @@ export const ProductDetails = ({
     (state: RootState) => state.products.selectedProductId,
   );
 
-  const sellPrice = selectedProduct.sellPrice.toFixed(2);
+  const sellPrice = selectedProduct.sellPrice?.toFixed(2);
   const isSellPriceValid = sellPriceInput.trim() !== '';
 
   const updatePriceButtonClasses = isSellPriceValid
     ? 'w-6 h-6 rounded-full bg-[#305e88] text-white hover:bg-[#274f72]'
     : 'w-6 h-6 rounded-full bg-slate-200 text-slate-400';
 
+  const priceDisplay = selectedProduct.sellPrice
+    ? formatMoney(selectedProduct.sellPrice)
+    : '-';
+
   const handleSubmit = () => {
     if (!selectedProductId) return;
-
     setIsEditingSellPrice(false);
     setSellPriceInput(sellPriceInput);
 
@@ -54,7 +57,7 @@ export const ProductDetails = ({
 
   const handleEdit = () => {
     setIsEditingSellPrice((prev) => !prev);
-    setSellPriceInput(sellPrice.toString());
+    setSellPriceInput(sellPrice?.toString() ?? '');
   };
 
   return (
@@ -106,7 +109,7 @@ export const ProductDetails = ({
           <div className='flex items-center gap-2 h-[32px] relative'>
             <p>
               <span className='font-semibold mr-1'>Sell Price:</span>{' '}
-              {formatMoney(selectedProduct.sellPrice)}
+              {priceDisplay}
             </p>
             <div className='relative group'>
               <Button

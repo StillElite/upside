@@ -10,7 +10,7 @@ interface NewProductModalProps {
   onClose: () => void;
   onCreateProduct: (product: {
     name: string;
-    sellPrice: number;
+    sellPrice?: number;
     sellIndividually: boolean;
     portionCount: number;
     individualPrice: number;
@@ -52,7 +52,7 @@ export const NewProductModal = ({
 
     onCreateProduct({
       name: name.trim(),
-      sellPrice: Number(sellPrice),
+      sellPrice: sellPrice.trim() === '' ? undefined : Number(sellPrice),
       sellIndividually: sellIndividually,
       portionCount: Number(portionCount),
       individualPrice: Number(individualPrice),

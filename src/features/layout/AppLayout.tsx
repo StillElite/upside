@@ -19,7 +19,7 @@ const AppLayout: React.FC = () => {
 
   const handleCreateProduct = (newProductData: {
     name: string;
-    sellPrice: number;
+    sellPrice?: number;
     sellIndividually: boolean;
     portionCount: number;
     individualPrice: number;

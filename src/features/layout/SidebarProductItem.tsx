@@ -1,5 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faBan,
+  faCheck,
   faEllipsis,
   faPen,
   faTrashAlt,
@@ -12,6 +14,7 @@ import {
   setSelectedProductId,
   updateProductName,
   deleteProduct,
+  toggleIndividualPricing,
 } from '../../store/slices/productSlice';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -55,6 +58,10 @@ export const SidebarProductItem = ({
       Are you sure you want to delete <strong>{product.name}</strong>?
     </>
   );
+
+  const pricingText = product.sellIndividually
+    ? 'Disable Individual Pricing'
+    : 'Enable Individual Pricing';
 
   const handleSubmit = () => {
     const isDuplicateProductName = hasDuplicateProductName(
@@ -104,6 +111,10 @@ export const SidebarProductItem = ({
     toast.success(`Product deleted successfully`);
 
     setIsConfirmOpen(false);
+  };
+
+  const handleToggleIndividualPricing = () => {
+    dispatch(toggleIndividualPricing({ productId: product.id }));
   };
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -187,6 +198,14 @@ export const SidebarProductItem = ({
                   className='text-xs'
                 />{' '}
                 Rename {product.name}
+              </li>
+              <li onClick={handleToggleIndividualPricing}>
+                <FontAwesomeIcon
+                  icon={product.sellIndividually ? faBan : faCheck}
+                  aria-hidden='true'
+                  className='text-xs mr-1'
+                />
+                {pricingText}
               </li>
               <li onClick={() => setIsConfirmOpen(true)}>
                 <FontAwesomeIcon
